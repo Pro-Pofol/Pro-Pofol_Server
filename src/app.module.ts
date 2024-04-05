@@ -7,6 +7,7 @@ import { PostLikeModule } from './post-like/post-like.module';
 import { TipLikeModule } from './tip-like/tip-like.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configDotenv } from 'dotenv';
+import { AuthModule } from './auth/auth.module';
 
 configDotenv();
 
@@ -31,6 +32,7 @@ configDotenv();
     FollowModule,
     PostLikeModule,
     TipLikeModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

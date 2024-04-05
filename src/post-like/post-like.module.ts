@@ -4,6 +4,6 @@ import { PostLikeService } from './post-like.service';
 
 @Module({
   controllers: [PostLikeController],
-  providers: [PostLikeService]
+  providers: [PostLikeService],
 })
 export class PostLikeModule {}
