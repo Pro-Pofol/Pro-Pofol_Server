@@ -1,5 +1,5 @@
-import { Tip } from 'src/tip/entity/tip.entity';
-import { User } from 'src/user/entity/user.entity';
+import { Tip } from 'src/domain/tip/tip.entity';
+import { User } from 'src/domain/user/user.entity';
 import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('tbl_tip_like')

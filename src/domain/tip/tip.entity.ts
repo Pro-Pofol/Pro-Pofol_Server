@@ -1,5 +1,5 @@
-import { TipLike } from 'src/tip-like/entity/tip-like.entity';
-import { User } from 'src/user/entity/user.entity';
+import { TipLike } from 'src/domain/tip-like/tip-like.entity';
+import { User } from 'src/domain/user/user.entity';
 import {
   Column,
   CreateDateColumn,

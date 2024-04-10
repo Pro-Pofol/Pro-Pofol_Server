@@ -1,6 +1,6 @@
 import { Major, PostType } from 'src/common/enums';
-import { PostLike } from 'src/post-like/entity/post-like.entity';
-import { User } from 'src/user/entity/user.entity';
+import { PostLike } from 'src/domain/post-like/post-like.entity';
+import { User } from 'src/domain/user/user.entity';
 import {
   Column,
   CreateDateColumn,

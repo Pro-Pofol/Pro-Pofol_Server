@@ -1,5 +1,5 @@
-import { Post } from 'src/post/entity/post.entity';
-import { User } from 'src/user/entity/user.entity';
+import { Post } from 'src/domain/post/post.entity';
+import { User } from 'src/domain/user/user.entity';
 import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('tbl_post_like')
