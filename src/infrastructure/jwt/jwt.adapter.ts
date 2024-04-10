@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TokenResponse } from '../../presentation/auth/auth.dto';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
@@ -19,9 +15,11 @@ export class JwtAdapter
   implements GenerateTokensPort, ReadCurrentUserPort, ReissuePort
 {
   constructor(
+    @Inject('user out port')
     private readonly readUserPort: ReadUserPort,
     private readonly jwtService: JwtService,
-    @InjectRedis() private readonly redis: Redis,
+    @InjectRedis()
+    private readonly redis: Redis,
   ) {}
 
   generateTokens = async (sub: string) => {
@@ -65,7 +63,7 @@ export class JwtAdapter
       return await this.readUserPort.readByOauthIdOrFail(sub);
     } catch (e) {
       console.error(e);
-      throw new UnauthorizedException('Invalid token');
+      throw new HttpException('Invalid token', 401, e.message);
     }
   };
 
@@ -73,7 +71,7 @@ export class JwtAdapter
     const acToken = await this.redis.get(rfToken);
 
     if (!acToken) {
-      throw new BadRequestException('Invalid refresh token');
+      throw new HttpException('Invalid refresh token', 400);
     }
 
     const sub = (

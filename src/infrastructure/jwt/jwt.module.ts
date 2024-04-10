@@ -12,6 +12,9 @@ import { JwtAdapter } from './jwt.adapter';
       secret: process.env.SECRET_KEY,
     }),
   ],
-  providers: [UserRepository, JwtAdapter],
+  providers: [
+    JwtAdapter,
+    { provide: 'user out port', useClass: UserRepository },
+  ],
 })
 export class JwtCustomModule {}

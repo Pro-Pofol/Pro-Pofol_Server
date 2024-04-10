@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { SignupUseCase } from './port/auth.in.port';
 import { SignupRequest } from '../../presentation/auth/auth.dto';
 import { ReadGoogleProfilePort } from './port/auth.out.port';
@@ -20,7 +20,7 @@ export class AuthService implements SignupUseCase {
     const profile = await this.readGoogleProfilePort.getGoogleProfile(token);
 
     if (await this.readUserPort.readByOauthId(profile.sub)) {
-      throw new ConflictException('Already registered');
+      throw new HttpException('Already registered', 409);
     }
 
     const user = new User(
