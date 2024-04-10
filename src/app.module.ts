@@ -1,30 +1,25 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
-import { PostModule } from './post/post.module';
-import { TipModule } from './tip/tip.module';
-import { FollowModule } from './follow/follow.module';
-import { PostLikeModule } from './post-like/post-like.module';
-import { TipLikeModule } from './tip-like/tip-like.module';
+import { UserModule } from './core/user/user.module';
+import { PostModule } from './core/post/post.module';
+import { TipModule } from './core/tip/tip.module';
+import { FollowModule } from './core/follow/follow.module';
+import { PostLikeModule } from './core/post-like/post-like.module';
+import { TipLikeModule } from './core/tip-like/tip-like.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { configDotenv } from 'dotenv';
-import { AuthModule } from './auth/auth.module';
-
-configDotenv();
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './core/auth/auth.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
+import {
+  redisConfig,
+  typeORMConfig,
+} from './infrastructure/config/typeorm.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      entities: [__dirname + '/**/entity/*.js'],
-      synchronize: true,
-      migrations: [__dirname + '/**/migrations/*.js'],
-      migrationsTableName: 'migrations',
-      autoLoadEntities: true,
+    ConfigModule.forRoot({
+      envFilePath: './.env',
+      isGlobal: true,
+      cache: true,
     }),
     UserModule,
     PostModule,
@@ -33,6 +28,8 @@ configDotenv();
     PostLikeModule,
     TipLikeModule,
     AuthModule,
+    TypeOrmModule.forRoot(typeORMConfig),
+    RedisModule.forRoot(redisConfig),
   ],
   controllers: [],
   providers: [],
