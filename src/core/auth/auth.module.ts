@@ -6,6 +6,7 @@ import { User } from '../../domain/user/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { UserRepository } from '../../domain/user/user.repository';
 import { JwtAdapter } from '../../infrastructure/jwt/jwt.adapter';
+import { GoogleAuthAdapter } from '../../infrastructure/oauth/google.adapter';
 
 @Module({
   imports: [
@@ -15,6 +16,11 @@ import { JwtAdapter } from '../../infrastructure/jwt/jwt.adapter';
     }),
   ],
   controllers: [AuthController],
-  providers: [UserRepository, JwtAdapter, AuthService],
+  providers: [
+    { provide: 'user out port', useClass: UserRepository },
+    { provide: 'jwt', useClass: JwtAdapter },
+    { provide: 'auth', useClass: AuthService },
+    { provide: 'google', useClass: GoogleAuthAdapter },
+  ],
 })
 export class AuthModule {}

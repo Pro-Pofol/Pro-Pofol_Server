@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { SignupUseCase } from './port/auth.in.port';
 import { SignupRequest } from '../../presentation/auth/auth.dto';
 import { ReadGoogleProfilePort } from './port/auth.out.port';
@@ -8,8 +8,11 @@ import { ReadUserPort, SaveUserPort } from '../user/port/user.out.port';
 @Injectable()
 export class AuthService implements SignupUseCase {
   constructor(
+    @Inject('user out port')
     private readonly saveUserPort: SaveUserPort,
+    @Inject('user out port')
     private readonly readUserPort: ReadUserPort,
+    @Inject('google')
     private readonly readGoogleProfilePort: ReadGoogleProfilePort,
   ) {}
 
