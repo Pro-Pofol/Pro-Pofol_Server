@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UserModule } from './core/user/user.module';
 import { PostModule } from './core/post/post.module';
 import { TipModule } from './core/tip/tip.module';
@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './core/auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { HTTPLoggerMiddleware } from './infrastructure/config/HTTP-logger.middleware';
 import {
   redisConfig,
   typeORMConfig,
@@ -34,4 +35,8 @@ import {
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(HTTPLoggerMiddleware).forRoutes('*');
+  }
+}
