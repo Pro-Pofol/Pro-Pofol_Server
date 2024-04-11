@@ -10,5 +10,5 @@ export enum Major {
 
 export enum PostType {
   PORTFOLIO = '포트폴리오',
-  COVER_LETTER = '자기소개서'
+  COVER_LETTER = '자기소개서',
 }
