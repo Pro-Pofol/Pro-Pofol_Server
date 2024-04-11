@@ -18,7 +18,7 @@ export class AuthController {
     private readonly signupUseCase: SignupUseCase,
   ) {}
 
-  @Post('/signup')
+  @Post('/google/signup')
   async signup(
     @Query('access_token') token: string,
     @Body() req: SignupRequest,
