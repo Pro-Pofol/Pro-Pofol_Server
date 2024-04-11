@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNotEmptyObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Major } from '../../common/enums';
 
 export class GoogleProfileResponse {
@@ -24,16 +30,40 @@ export class TokenResponse {
 }
 
 export class SignupRequest {
-  @IsString({ message: 'string 이여야 합니다.' })
-  name?: string | null;
+  @IsString({
+    message: (validationArguments) =>
+      `${validationArguments.property} : string이여야 합니다.`,
+  })
+  @IsOptional()
+  name?: string;
 
-  @IsNotEmpty({ message: 'null일 수 없습니다.' })
+  @IsNotEmpty({
+    message: (validationArguments) =>
+      `${validationArguments.property} : null일 수 없습니다.`,
+  })
+  @IsNotEmptyObject(
+    { nullable: false },
+    {
+      message: (validationArguments) =>
+        `${validationArguments.property} : null일 수 없습니다.`,
+    },
+  )
+  @IsEnum(Major, {
+    message: (validationArguments) =>
+      `${validationArguments.property} : enum값이 아닙니다.`,
+  })
   major: Major;
 
-  @IsNotEmpty({ message: 'null일 수 없습니다.' })
+  @IsNotEmpty({
+    message: (validationArguments) =>
+      `${validationArguments.property} : null일 수 없습니다.`,
+  })
   generation: number;
 
-  @IsNotEmpty({ message: 'null일 수 없습니다.' })
-  @IsString({ message: 'string 이여야 합니다.' })
-  profile_image_url?: string | null;
+  @IsString({
+    message: (validationArguments) =>
+      `${validationArguments.property} : string 이여야 합니다.`,
+  })
+  @IsOptional()
+  profile_image_url?: string;
 }
