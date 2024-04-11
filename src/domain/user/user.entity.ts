@@ -11,7 +11,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UUID } from 'typeorm/driver/mongodb/bson.typings';
+import { v4 } from 'uuid';
 
 @Entity('tbl_user')
 export class User {
@@ -72,7 +72,7 @@ export class User {
   ) {
     if (id) this.id = id;
     if (uuid) this.uuid = uuid;
-    else this.uuid = UUID.generate().toString();
+    else this.uuid = v4();
     this.oauthId = oauthId;
     this.name = name;
     this.major = major;
