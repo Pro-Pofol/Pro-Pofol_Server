@@ -25,7 +25,7 @@ export class GoogleAuthAdapter implements ReadGoogleProfilePort {
         if (e.response?.status == 401) {
           throw new UnauthorizedException({
             status: 401,
-            message: 'The token has expired',
+            message: e.response?.data ?? 'Invalid Token',
           });
         } else {
           this.logger.error(e.response?.status ?? e.status);

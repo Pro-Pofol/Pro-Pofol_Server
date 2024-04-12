@@ -17,6 +17,18 @@ export class GoogleProfileResponse {
   email_verified: boolean;
 }
 
+export class KakaoProfileResponse {
+  id: string;
+  properties: {
+    nickname: string;
+    profile_image: string;
+  };
+}
+
+export class KakaoTokenResponse {
+  access_token: string;
+}
+
 export class TokenResponse {
   access_token: string;
   refresh_token: string;

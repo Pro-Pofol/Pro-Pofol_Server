@@ -1,5 +1,6 @@
 import {
   GoogleProfileResponse,
+  KakaoProfileResponse,
   TokenResponse,
 } from '../../../presentation/auth/auth.dto';
 import { User } from '../../../domain/user/user.entity';
@@ -14,6 +15,10 @@ export interface ReadCurrentUserPort {
 
 export interface ReadGoogleProfilePort {
   getGoogleProfile(token: string): Promise<GoogleProfileResponse>;
+}
+
+export interface ReadKakaoProfilePort {
+  getKakaoProfile(token: string): Promise<KakaoProfileResponse>;
 }
 
 export interface ReissuePort {
