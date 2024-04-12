@@ -18,14 +18,15 @@ export class AuthController {
     private readonly signupUseCase: SignupUseCase,
   ) {}
 
-  @Post('/google/signup')
-  async signup(
+  @Post('/google/signup') // API-Auth-002
+  async googleSignup(
     @Query('access_token') token: string,
     @Body() req: SignupRequest,
     @Res() res: Response,
   ): Promise<Response> {
     if (!token)
       throw new HttpException('access_token: null일 수 없습니다.', 400);
+
     await this.signupUseCase.signupWithGoogle(token, req);
 
     return res.status(201).send();
