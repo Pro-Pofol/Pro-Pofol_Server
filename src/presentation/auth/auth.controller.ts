@@ -29,20 +29,20 @@ export class AuthController {
   @Post('/google/signup') // API-Auth-002
   async googleSignup(
     @Headers('OA-TOKEN') token: string,
-    @Req() request: Request,
-    @Body() req: SignupRequest,
+    @Req() req: Request,
+    @Body() dto: SignupRequest,
     @Res() res: Response,
   ): Promise<Response> {
     if (!token) throw new BadRequestException('OA-TOKEN: null일 수 없습니다.');
 
-    await this.signupUseCase.signupWithGoogle(token, req);
+    await this.signupUseCase.signupWithGoogle(token, dto);
 
     let location: string;
 
-    if (request.hostname != 'localhost') {
-      location = `${request.protocol}://${request.hostname}/auth/google/login`;
+    if (req.hostname != 'localhost') {
+      location = `${req.protocol}://${req.hostname}/auth/google/login`;
     } else {
-      location = `${request.protocol}://${request.hostname}:${process.env.PORT}/auth/google/login`;
+      location = `${req.protocol}://${req.hostname}:${process.env.PORT}/auth/google/login`;
     }
 
     return res.status(201).location(location).send();
@@ -51,20 +51,20 @@ export class AuthController {
   @Post('/kakao/signup') // API-Auth-202
   async kakaoSignup(
     @Headers('OA-TOKEN') token: string,
-    @Req() request: Request,
-    @Body() req: SignupRequest,
+    @Req() req: Request,
+    @Body() dto: SignupRequest,
     @Res() res: Response,
   ): Promise<Response> {
     if (!token) throw new BadRequestException('OA-TOKEN: null일 수 없습니다.');
 
-    await this.signupUseCase.signupWithKakao(token, req);
+    await this.signupUseCase.signupWithKakao(token, dto);
 
     let location: string;
 
-    if (request.hostname != 'localhost') {
-      location = `${request.protocol}://${request.hostname}/auth/kakao/login`;
+    if (req.hostname != 'localhost') {
+      location = `${req.protocol}://${req.hostname}/auth/kakao/login`;
     } else {
-      location = `${request.protocol}://${request.hostname}:${process.env.PORT}/auth/kako/login`;
+      location = `${req.protocol}://${req.hostname}:${process.env.PORT}/auth/kako/login`;
     }
 
     return res.status(201).location(location).send();
