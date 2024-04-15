@@ -3,7 +3,7 @@ import { SignupUseCase } from './port/auth.in.port';
 import { SignupRequest } from '../../presentation/auth/auth.dto';
 import { ReadGoogleProfilePort } from './port/auth.out.port';
 import { User } from '../../domain/user/user.entity';
-import { ReadUserPort, SaveUserPort } from '../user/port/user.out.port';
+import { ExistsUserPort, SaveUserPort } from '../user/port/user.out.port';
 
 @Injectable()
 export class AuthService implements SignupUseCase {
@@ -11,7 +11,7 @@ export class AuthService implements SignupUseCase {
     @Inject('user out port')
     private readonly saveUserPort: SaveUserPort,
     @Inject('user out port')
-    private readonly readUserPort: ReadUserPort,
+    private readonly existsUserPort: ExistsUserPort,
     @Inject('google')
     private readonly readGoogleProfilePort: ReadGoogleProfilePort,
   ) {}
@@ -19,7 +19,7 @@ export class AuthService implements SignupUseCase {
   signupWithGoogle = async (token: string, req: SignupRequest) => {
     const profile = await this.readGoogleProfilePort.getGoogleProfile(token);
 
-    if (await this.readUserPort.readByOauthId(profile.sub)) {
+    if (await this.existsUserPort.existsByOauthId(profile.sub)) {
       throw new ConflictException('Already registered');
     }
 

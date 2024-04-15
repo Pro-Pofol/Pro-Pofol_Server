@@ -1,8 +1,11 @@
 import { User } from '../../../domain/user/user.entity';
 
 export interface ReadUserPort {
-  readByOauthId(oauthId: string): Promise<User | null>;
-  readByOauthIdOrFail(oauthId: string): Promise<User>;
+  findByOauthIdOrFail(oauthId: string): Promise<User>;
+}
+
+export interface ExistsUserPort {
+  existsByOauthId(oauthId: string): Promise<boolean>;
 }
 
 export interface SaveUserPort {
