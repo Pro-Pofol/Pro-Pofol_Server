@@ -11,13 +11,11 @@ export class UserRepository implements ReadUserPort, SaveUserPort {
   ) {}
 
   readByOauthId = async (oauthId: string): Promise<User | null> => {
-    return await this.userRepository.findOne({
-      where: { oauthId: oauthId },
-    });
+    return await this.userRepository.findOneBy({ oauthId });
   };
 
   readByOauthIdOrFail = async (oauthId: string): Promise<User> => {
-    const user = await this.userRepository.findOne({ where: { oauthId: oauthId } });
+    const user = await this.userRepository.findOneBy({ oauthId });
 
     if (!user) throw new NotFoundException('User not found');
 

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpException,
@@ -25,7 +26,7 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<Response> {
     if (!token)
-      throw new HttpException('access_token: null일 수 없습니다.', 400);
+      throw new BadRequestException('access_token: null일 수 없습니다.');
 
     await this.signupUseCase.signupWithGoogle(token, req);
 

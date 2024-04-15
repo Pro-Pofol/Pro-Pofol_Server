@@ -21,6 +21,7 @@ export class HttpExceptionFilter {
         path: request.url,
       });
     }
+
     // nest 자체에서 처리해주는 error handling의 경우
     else {
       response.status(status).json({
