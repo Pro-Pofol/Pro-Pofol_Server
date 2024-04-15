@@ -1,6 +1,11 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TokenResponse } from '../../presentation/auth/auth.dto';
+import { TokenResponse } from '../../presentation/auth/dto/auth.response';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
 import {
@@ -60,10 +65,10 @@ export class JwtAdapter
         })
       ).sub;
 
-      return await this.readUserPort.readByOauthIdOrFail(sub);
+      return await this.readUserPort.findByOauthIdOrFail(sub);
     } catch (e) {
       console.error(e);
-      throw new HttpException('Invalid token', 401, e.message);
+      throw new UnauthorizedException('Invalid token', e.message);
     }
   };
 
@@ -71,7 +76,7 @@ export class JwtAdapter
     const acToken = await this.redis.get(rfToken);
 
     if (!acToken) {
-      throw new HttpException('Invalid refresh token', 400);
+      throw new BadRequestException('Invalid refresh token');
     }
 
     const sub = (

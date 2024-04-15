@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import axios, { AxiosError } from 'axios';
-import { GoogleProfileResponse } from '../../presentation/auth/auth.dto';
+import { GoogleProfileResponse } from '../../presentation/auth/dto/auth.response';
 import { ReadGoogleProfilePort } from '../../core/auth/port/auth.out.port';
 
 @Injectable()
@@ -23,10 +23,7 @@ export class GoogleAuthAdapter implements ReadGoogleProfilePort {
         this.logger.error(e.response?.data);
 
         if (e.response?.status == 401) {
-          throw new UnauthorizedException({
-            status: 401,
-            message: e.response?.data ?? 'Invalid Token',
-          });
+          throw new UnauthorizedException(e.response?.data ?? 'Invalid Token');
         } else {
           this.logger.error(e.response?.status ?? e.status);
           throw new InternalServerErrorException(

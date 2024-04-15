@@ -10,10 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './core/auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { HTTPLoggerMiddleware } from './infrastructure/config/HTTP-logger.middleware';
-import {
-  redisConfig,
-  typeORMConfig,
-} from './infrastructure/config/typeorm.config';
+import { redisConfig, typeORMConfig } from './infrastructure/config/db.config';
 
 @Module({
   imports: [

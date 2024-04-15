@@ -15,12 +15,14 @@ export class HttpExceptionFilter {
     if (typeof error === 'string') {
       response.status(status).json({
         success: false,
-        error,
+        error: error,
         statusCode: status,
         timestamp: new Date().toISOString(),
         path: request.url,
+        statusMessage: exception.message,
       });
     }
+
     // nest 자체에서 처리해주는 error handling의 경우
     else {
       response.status(status).json({

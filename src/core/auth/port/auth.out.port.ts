@@ -2,7 +2,7 @@ import {
   GoogleProfileResponse,
   KakaoProfileResponse,
   TokenResponse,
-} from '../../../presentation/auth/auth.dto';
+} from '../../../presentation/auth/dto/auth.response';
 import { User } from '../../../domain/user/user.entity';
 
 export interface GenerateTokensPort {

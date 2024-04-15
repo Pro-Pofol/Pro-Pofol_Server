@@ -1,19 +1,17 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   HttpException,
+  Headers,
   Inject,
   Post,
-  Query,
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import {
-  GenerateKakaoTokenUseCase,
-  SignupUseCase,
-} from '../../core/auth/port/auth.in.port';
-import { SignupRequest } from './auth.dto';
+import { GenerateKakaoTokenUseCase, SignupUseCase } from '../../core/auth/port/auth.in.port';
+import { SignupRequest } from './dto/auth.request';
 
 @Controller('auth')
 export class AuthController {
@@ -26,12 +24,11 @@ export class AuthController {
 
   @Post('/google/signup') // API-Auth-002
   async googleSignup(
-    @Query('access_token') token: string,
+    @Headers('OA-TOKEN') token: string,
     @Body() req: SignupRequest,
     @Res() res: Response,
   ): Promise<Response> {
-    if (!token)
-      throw new HttpException('access_token: null일 수 없습니다.', 400);
+    if (!token) throw new BadRequestException('OA-TOKEN: null일 수 없습니다.');
 
     await this.signupUseCase.signupWithGoogle(token, req);
 
