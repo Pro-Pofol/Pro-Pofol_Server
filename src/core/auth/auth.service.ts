@@ -8,7 +8,6 @@ import {
 import { User } from '../../domain/user/user.entity';
 import {
   ExistsUserPort,
-  ReadUserPort,
   SaveUserPort,
 } from '../user/port/user.out.port';
 
@@ -19,8 +18,6 @@ export class AuthService implements SignupUseCase {
     private readonly saveUserPort: SaveUserPort,
     @Inject('user out port')
     private readonly existsUserPort: ExistsUserPort,
-    @Inject('user out port')
-    private readonly readUserPort: ReadUserPort,
     @Inject('google')
     private readonly readGoogleProfilePort: ReadGoogleProfilePort,
     @Inject('kakao')
@@ -59,7 +56,7 @@ export class AuthService implements SignupUseCase {
   ): Promise<void> => {
     const profile = await this.readKakaoProfilePort.getKakaoProfile(token);
 
-    if (await this.readUserPort.findByOauthIdOrFail(profile.id)) {
+    if (await this.existsUserPort.existsByOauthId(profile.id)) {
       throw new ConflictException('Already registered');
     }
 
