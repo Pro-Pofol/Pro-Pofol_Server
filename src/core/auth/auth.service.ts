@@ -1,6 +1,6 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { SignupUseCase } from './port/auth.in.port';
-import { SignupRequest } from '../../presentation/auth/auth.dto';
+import { SignupRequest } from '../../presentation/auth/dto/auth.request';
 import { ReadGoogleProfilePort } from './port/auth.out.port';
 import { User } from '../../domain/user/user.entity';
 import { ExistsUserPort, SaveUserPort } from '../user/port/user.out.port';

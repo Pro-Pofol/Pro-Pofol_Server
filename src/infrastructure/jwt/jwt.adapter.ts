@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TokenResponse } from '../../presentation/auth/auth.dto';
+import { TokenResponse } from '../../presentation/auth/dto/auth.response';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
 import {

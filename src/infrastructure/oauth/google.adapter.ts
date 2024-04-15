@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import axios, { AxiosError } from 'axios';
-import { GoogleProfileResponse } from '../../presentation/auth/auth.dto';
+import { GoogleProfileResponse } from '../../presentation/auth/dto/auth.response';
 import { ReadGoogleProfilePort } from '../../core/auth/port/auth.out.port';
 
 @Injectable()
