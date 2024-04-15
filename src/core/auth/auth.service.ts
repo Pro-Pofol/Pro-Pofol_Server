@@ -6,7 +6,11 @@ import {
   ReadKakaoProfilePort,
 } from './port/auth.out.port';
 import { User } from '../../domain/user/user.entity';
-import { ExistsUserPort, SaveUserPort } from '../user/port/user.out.port';
+import {
+  ExistsUserPort,
+  ReadUserPort,
+  SaveUserPort,
+} from '../user/port/user.out.port';
 
 @Injectable()
 export class AuthService implements SignupUseCase {
@@ -15,8 +19,11 @@ export class AuthService implements SignupUseCase {
     private readonly saveUserPort: SaveUserPort,
     @Inject('user out port')
     private readonly existsUserPort: ExistsUserPort,
+    @Inject('user out port')
+    private readonly readUserPort: ReadUserPort,
     @Inject('google')
     private readonly readGoogleProfilePort: ReadGoogleProfilePort,
+    @Inject('kakao')
     private readonly readKakaoProfilePort: ReadKakaoProfilePort,
   ) {}
 
@@ -52,8 +59,8 @@ export class AuthService implements SignupUseCase {
   ): Promise<void> => {
     const profile = await this.readKakaoProfilePort.getKakaoProfile(token);
 
-    if (await this.readUserPort.readByOauthId(profile.id)) {
-      throw new HttpException('Already registered', 409);
+    if (await this.readUserPort.findByOauthIdOrFail(profile.id)) {
+      throw new ConflictException('Already registered');
     }
 
     const user = new User(

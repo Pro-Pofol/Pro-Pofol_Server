@@ -1,17 +1,18 @@
 import {
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import axios, { AxiosError } from 'axios';
-import {
-  KakaoProfileResponse,
-  KakaoTokenResponse,
-} from '../../presentation/auth/auth.dto';
 import { ReadKakaoProfilePort } from '../../core/auth/port/auth.out.port';
 import { GenerateKakaoTokenUseCase } from '../../core/auth/port/auth.in.port';
 import * as process from 'node:process';
+import {
+  KakaoProfileResponse,
+  KakaoTokenResponse,
+} from '../../presentation/auth/dto/auth.response';
 
 @Injectable()
 export class KakaoAuthAdapter
@@ -30,15 +31,11 @@ export class KakaoAuthAdapter
         this.logger.error(e.response?.data);
 
         if (e.response?.status == 401) {
-          throw new UnauthorizedException({
-            status: 401,
-            message: e.response?.data ?? 'Invalid Token',
-          });
+          throw new UnauthorizedException(e.response?.data ?? 'Invalid Token');
         } else if (e.response?.status == 403) {
-          throw new UnauthorizedException({
-            status: 403,
-            message: e.response?.data ?? 'Invalid Credentials',
-          });
+          throw new ForbiddenException(
+            e.response?.data ?? 'Invalid Credentials',
+          );
         } else {
           this.logger.error(e.response?.status ?? e.status);
           throw new InternalServerErrorException(
@@ -66,15 +63,11 @@ export class KakaoAuthAdapter
         this.logger.error(e.response?.data);
 
         if (e.response?.status == 401) {
-          throw new UnauthorizedException({
-            status: 401,
-            message: e.response?.data ?? 'Invalid code',
-          });
+          throw new UnauthorizedException(e.response?.data ?? 'Invalid code');
         } else if (e.response?.status == 403) {
-          throw new UnauthorizedException({
-            status: 403,
-            message: e.response?.data ?? 'Invalid Credentials',
-          });
+          throw new ForbiddenException(
+            e.response?.data ?? 'Invalid Credentials',
+          );
         } else {
           this.logger.error(e.response?.status ?? e.status);
           throw new InternalServerErrorException(

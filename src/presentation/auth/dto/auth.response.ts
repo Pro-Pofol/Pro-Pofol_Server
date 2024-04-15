@@ -19,3 +19,15 @@ export class TokenResponse {
     }
   }
 }
+
+export class KakaoProfileResponse {
+  id: string;
+  properties: {
+    nickname: string;
+    profile_image: string;
+  };
+}
+
+export class KakaoTokenResponse {
+  access_token: string;
+}

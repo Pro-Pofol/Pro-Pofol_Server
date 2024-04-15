@@ -1,9 +1,9 @@
+import { User } from '../../../domain/user/user.entity';
 import {
   GoogleProfileResponse,
   KakaoProfileResponse,
   TokenResponse,
 } from '../../../presentation/auth/dto/auth.response';
-import { User } from '../../../domain/user/user.entity';
 
 export interface GenerateTokensPort {
   generateTokens(sub: string): Promise<TokenResponse>;

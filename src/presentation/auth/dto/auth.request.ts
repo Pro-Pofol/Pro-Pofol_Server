@@ -6,18 +6,6 @@ import {
 } from 'class-validator';
 import { Major } from '../../../common/enums';
 
-export class KakaoProfileResponse {
-  id: string;
-  properties: {
-    nickname: string;
-    profile_image: string;
-  };
-}
-
-export class KakaoTokenResponse {
-  access_token: string;
-}
-
 export class SignupRequest {
   @IsString({
     message: (validationArguments) =>
