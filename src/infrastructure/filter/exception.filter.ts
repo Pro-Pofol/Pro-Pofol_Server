@@ -11,6 +11,8 @@ export class HttpExceptionFilter {
       | string
       | { error: string; statusCode: number; message: string | string[] };
 
+    console.error(exception.stack);
+
     // 우리가 설정한 throw new HttpException()의 경우
     if (typeof error === 'string') {
       response.status(status).json({

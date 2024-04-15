@@ -1,9 +1,15 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { SignupUseCase } from './port/auth.in.port';
 import { SignupRequest } from '../../presentation/auth/dto/auth.request';
-import { ReadGoogleProfilePort } from './port/auth.out.port';
+import {
+  ReadGoogleProfilePort,
+  ReadKakaoProfilePort,
+} from './port/auth.out.port';
 import { User } from '../../domain/user/user.entity';
-import { ExistsUserPort, SaveUserPort } from '../user/port/user.out.port';
+import {
+  ExistsUserPort,
+  SaveUserPort,
+} from '../user/port/user.out.port';
 
 @Injectable()
 export class AuthService implements SignupUseCase {
@@ -14,6 +20,8 @@ export class AuthService implements SignupUseCase {
     private readonly existsUserPort: ExistsUserPort,
     @Inject('google')
     private readonly readGoogleProfilePort: ReadGoogleProfilePort,
+    @Inject('kakao')
+    private readonly readKakaoProfilePort: ReadKakaoProfilePort,
   ) {}
 
   signupWithGoogle = async (token: string, req: SignupRequest) => {
@@ -31,6 +39,35 @@ export class AuthService implements SignupUseCase {
       req.major,
       req.generation,
       req.profile_image_url ?? profile.picture,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    );
+
+    await this.saveUserPort.save(user);
+  };
+
+  signupWithKakao = async (
+    token: string,
+    req: SignupRequest,
+  ): Promise<void> => {
+    const profile = await this.readKakaoProfilePort.getKakaoProfile(token);
+
+    if (await this.existsUserPort.existsByOauthId(profile.id)) {
+      throw new ConflictException('Already registered');
+    }
+
+    const user = new User(
+      null,
+      null,
+      profile.id,
+      req.name ?? profile.properties.nickname,
+      req.major,
+      req.generation,
+      req.profile_image_url ?? profile.properties.profile_image,
       null,
       null,
       null,

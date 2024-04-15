@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserRepository } from '../../domain/user/user.repository';
 import { JwtAdapter } from '../../infrastructure/jwt/jwt.adapter';
 import { GoogleAuthAdapter } from '../../infrastructure/oauth/google.adapter';
+import { KakaoAuthAdapter } from '../../infrastructure/oauth/kakao.adapter';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { GoogleAuthAdapter } from '../../infrastructure/oauth/google.adapter';
     { provide: 'jwt', useClass: JwtAdapter },
     { provide: 'auth', useClass: AuthService },
     { provide: 'google', useClass: GoogleAuthAdapter },
+    { provide: 'kakao', useClass: KakaoAuthAdapter },
   ],
 })
 export class AuthModule {}
