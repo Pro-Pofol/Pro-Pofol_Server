@@ -41,13 +41,6 @@ export class SignupRequest {
     message: (validationArguments) =>
       `${validationArguments.property} : null일 수 없습니다.`,
   })
-  @IsNotEmptyObject(
-    { nullable: false },
-    {
-      message: (validationArguments) =>
-        `${validationArguments.property} : null일 수 없습니다.`,
-    },
-  )
   @IsEnum(Major, {
     message: (validationArguments) =>
       `${validationArguments.property} : enum값이 아닙니다.`,
