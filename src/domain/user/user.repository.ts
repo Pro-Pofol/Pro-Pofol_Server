@@ -7,15 +7,15 @@ import { ReadUserPort, SaveUserPort } from '../../core/user/port/user.out.port';
 @Injectable()
 export class UserRepository implements ReadUserPort, SaveUserPort {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(User) private readonly userEntity: Repository<User>,
   ) {}
 
   readByOauthId = async (oauthId: string): Promise<User | null> => {
-    return await this.userRepository.findOneBy({ oauthId });
+    return await this.userEntity.findOneBy({ oauthId });
   };
 
   readByOauthIdOrFail = async (oauthId: string): Promise<User> => {
-    const user = await this.userRepository.findOneBy({ oauthId });
+    const user = await this.userEntity.findOneBy({ oauthId });
 
     if (!user) throw new NotFoundException('User not found');
 
@@ -23,6 +23,6 @@ export class UserRepository implements ReadUserPort, SaveUserPort {
   };
 
   save = async (entity: User): Promise<User> => {
-    return await this.userRepository.save(entity);
+    return await this.userEntity.save(entity);
   };
 }
