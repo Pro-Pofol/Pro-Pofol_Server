@@ -1,18 +1,18 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
-import { SignupUseCase } from './port/auth.in.port';
+import { LoginUseCase, SignupUseCase } from './port/auth.in.port';
 import { SignupRequest } from '../../presentation/auth/dto/auth.request';
 import {
+  GenerateTokensPort,
+  ReadFacebookProfilePort,
   ReadGoogleProfilePort,
   ReadKakaoProfilePort,
 } from './port/auth.out.port';
 import { User } from '../../domain/user/user.entity';
-import {
-  ExistsUserPort,
-  SaveUserPort,
-} from '../user/port/user.out.port';
+import { ExistsUserPort, SaveUserPort } from '../user/port/user.out.port';
+import { TokenResponse } from 'src/presentation/auth/dto/auth.response';
 
 @Injectable()
-export class AuthService implements SignupUseCase {
+export class SignupService implements SignupUseCase {
   constructor(
     @Inject('user out port')
     private readonly saveUserPort: SaveUserPort,
@@ -77,5 +77,28 @@ export class AuthService implements SignupUseCase {
     );
 
     await this.saveUserPort.save(user);
+  };
+}
+
+@Injectable()
+export class LoginService implements LoginUseCase {
+  constructor(
+    @Inject('jwt')
+    private readonly generateTokensPort: GenerateTokensPort,
+    @Inject('user out port')
+    private readonly existsUserPort: ExistsUserPort,
+    @Inject('facebook')
+    private readonly readFacebookProfilePort: ReadFacebookProfilePort,
+  ) {}
+
+  loginWithFacebook = async (token: string): Promise<TokenResponse> => {
+
+    const profile = await this.readFacebookProfilePort.getFacebookProfile(token);
+
+    if (await this.existsUserPort.existsByOauthId(profile.id)) {
+      throw new ConflictException('User does not sign up');
+    }
+
+    return await this.generateTokensPort.generateTokens(profile.id);
   };
 }
