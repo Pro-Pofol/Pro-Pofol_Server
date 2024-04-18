@@ -1,5 +1,8 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RedisModuleOptions } from '@liaoliaots/nestjs-redis';
+import { configDotenv } from 'dotenv';
+
+configDotenv();
 
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'mysql',
