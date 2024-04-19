@@ -96,9 +96,7 @@ export class LoginService implements LoginUseCase {
       token,
     );
 
-    const profile = await this.readFacebookProfilePort.getFacebookProfile(token);
-
-    if (await this.existsUserPort.existsByOauthId(profile.id)) {
+    if (!(await this.existsUserPort.existsByOauthId(profile.id))) {
       throw new ConflictException('User does not sign up');
     }
 
