@@ -121,12 +121,24 @@ export class LoginService implements LoginUseCase {
     private readonly existsUserPort: ExistsUserPort,
     @Inject('facebook')
     private readonly readFacebookProfilePort: ReadFacebookProfilePort,
+    @Inject('kakao')
+    private readonly readKakaoProfilePort: ReadKakaoProfilePort,
   ) {}
 
   loginWithFacebook = async (token: string): Promise<TokenResponse> => {
     const profile = await this.readFacebookProfilePort.getFacebookProfile(
       token,
     );
+
+    if (!(await this.existsUserPort.existsByOauthId(profile.id))) {
+      throw new ConflictException('User does not sign up');
+    }
+
+    return await this.generateTokensPort.generateTokens(profile.id);
+  };
+
+  loginWithKakao = async (token: string): Promise<TokenResponse> => {
+    const profile = await this.readKakaoProfilePort.getKakaoProfile(token);
 
     if (!(await this.existsUserPort.existsByOauthId(profile.id))) {
       throw new ConflictException('User does not sign up');
