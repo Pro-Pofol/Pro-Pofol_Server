@@ -6,9 +6,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import axios, { AxiosError } from 'axios';
-import { ReadKakaoProfilePort } from '../../core/auth/port/auth.out.port';
+import {
+  ReadKakaoProfilePort,
+  RevokeKakaoTokenPort,
+} from '../../core/auth/port/auth.out.port';
 import { GenerateKakaoTokenUseCase } from '../../core/auth/port/auth.in.port';
-import * as process from 'node:process';
 import {
   KakaoProfileResponse,
   KakaoTokenResponse,
@@ -16,14 +18,17 @@ import {
 
 @Injectable()
 export class KakaoAuthAdapter
-  implements ReadKakaoProfilePort, GenerateKakaoTokenUseCase
+  implements
+    ReadKakaoProfilePort,
+    GenerateKakaoTokenUseCase,
+    RevokeKakaoTokenPort
 {
   private readonly logger = new Logger(KakaoAuthAdapter.name);
 
   getKakaoProfile = async (token: string): Promise<KakaoProfileResponse> => {
     const response = await axios
       .get<KakaoProfileResponse>('https://kapi.kakao.com/v2/user/me', {
-        headers: { Authorization: token },
+        headers: { Authorization: `Bearer ${token}` },
         params: { property_keys: '["kakao_account.profile"]' },
       })
       .catch((e: AxiosError) => {
@@ -77,5 +82,17 @@ export class KakaoAuthAdapter
       });
 
     return response.data;
+  };
+
+  revokeKakaoToken = async (token: string): Promise<void> => {
+    await axios
+      .post('https://kauth.kakao.com/oauth/token/v1/user/logout', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .catch((e: AxiosError) => {
+        this.logger.error(e.message);
+        this.logger.error(e.response?.data);
+        this.logger.error(e.response?.status ?? e.status);
+      });
   };
 }

@@ -23,6 +23,10 @@ export interface ReadKakaoProfilePort {
   getKakaoProfile(token: string): Promise<KakaoProfileResponse>;
 }
 
+export interface RevokeKakaoTokenPort {
+  revokeKakaoToken(token: string): Promise<void>;
+}
+
 export interface ReadFacebookProfilePort {
   getFacebookProfile(token: string): Promise<FacebookInfoResponse>;
 
