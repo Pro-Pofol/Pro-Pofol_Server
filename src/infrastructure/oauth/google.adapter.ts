@@ -6,10 +6,15 @@ import {
 } from '@nestjs/common';
 import axios, { AxiosError } from 'axios';
 import { GoogleProfileResponse } from '../../presentation/auth/dto/auth.response';
-import { ReadGoogleProfilePort } from '../../core/auth/port/auth.out.port';
+import {
+  ReadGoogleProfilePort,
+  RevokeGoogleTokenPort,
+} from '../../core/auth/port/auth.out.port';
 
 @Injectable()
-export class GoogleAuthAdapter implements ReadGoogleProfilePort {
+export class GoogleAuthAdapter
+  implements ReadGoogleProfilePort, RevokeGoogleTokenPort
+{
   private readonly logger = new Logger(GoogleAuthAdapter.name);
 
   getGoogleProfile = async (token: string) => {
@@ -33,5 +38,18 @@ export class GoogleAuthAdapter implements ReadGoogleProfilePort {
       });
 
     return response.data;
+  };
+
+  revokeGoogleToken = async (token: string): Promise<void> => {
+    await axios
+      .post(
+        'https://oauth2.googleapis.com/revoke',
+        {},
+        { params: { token: token } },
+      )
+      .catch((e: AxiosError) => {
+        this.logger.error(e.message);
+        this.logger.error(e.response?.data);
+      });
   };
 }

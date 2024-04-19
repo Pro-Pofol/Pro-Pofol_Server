@@ -17,4 +17,6 @@ export interface LoginUseCase {
   loginWithFacebook(token: string): Promise<TokenResponse>;
 
   loginWithKakao(token: string): Promise<TokenResponse>;
+
+  loginWithGoogle(token: string): Promise<TokenResponse>;
 }

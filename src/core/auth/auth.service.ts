@@ -6,6 +6,7 @@ import {
   ReadFacebookProfilePort,
   ReadGoogleProfilePort,
   ReadKakaoProfilePort,
+  RevokeGoogleTokenPort,
   RevokeKakaoTokenPort,
 } from './port/auth.out.port';
 import { User } from '../../domain/user/user.entity';
@@ -126,6 +127,10 @@ export class LoginService implements LoginUseCase {
     private readonly readKakaoProfilePort: ReadKakaoProfilePort,
     @Inject('kakao')
     private readonly revokeKakaoTokenPort: RevokeKakaoTokenPort,
+    @Inject('google')
+    private readonly readGoogleProfilePort: ReadGoogleProfilePort,
+    @Inject('google')
+    private readonly revokeGoogleTokenPort: RevokeGoogleTokenPort,
   ) {}
 
   loginWithFacebook = async (token: string): Promise<TokenResponse> => {
@@ -150,5 +155,17 @@ export class LoginService implements LoginUseCase {
     }
 
     return await this.generateTokensPort.generateTokens(profile.id);
+  };
+
+  loginWithGoogle = async (token: string): Promise<TokenResponse> => {
+    const profile = await this.readGoogleProfilePort.getGoogleProfile(token);
+
+    if (!(await this.existsUserPort.existsByOauthId(profile.sub))) {
+      throw new ConflictException('User does not sign up');
+    }
+
+    await this.revokeGoogleTokenPort.revokeGoogleToken(token);
+
+    return await this.generateTokensPort.generateTokens(profile.sub);
   };
 }

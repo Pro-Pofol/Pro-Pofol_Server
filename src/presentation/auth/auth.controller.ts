@@ -135,6 +135,27 @@ export class LoginController {
       .send();
   }
 
+  @Get('/google/login')
+  async googleLogin(
+    @Headers('OA-TOKEN') token: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token) throw new BadRequestException('OA-TOKEN: null일 수 없습니다.');
+
+    const { access_token, refresh_token } =
+      await this.loginUseCase.loginWithGoogle(token);
+
+    return res
+      .status(200)
+      .header('Authorization', `Bearer ${access_token}`)
+      .cookie('RF-TOKEN', refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      })
+      .send();
+  }
+
   @Get('/kakao/login')
   async kakaoLogin(
     @Headers('OA-TOKEN') token: string,
