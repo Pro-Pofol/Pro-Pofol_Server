@@ -92,6 +92,9 @@ export class LoginService implements LoginUseCase {
   ) {}
 
   loginWithFacebook = async (token: string): Promise<TokenResponse> => {
+    const profile = await this.readFacebookProfilePort.getFacebookProfile(
+      token,
+    );
 
     const profile = await this.readFacebookProfilePort.getFacebookProfile(token);
 
