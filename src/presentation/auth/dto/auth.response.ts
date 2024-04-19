@@ -31,3 +31,8 @@ export class KakaoProfileResponse {
 export class KakaoTokenResponse {
   access_token: string;
 }
+
+export class FacebookInfoResponse {
+  id: string;
+  name: string;
+}

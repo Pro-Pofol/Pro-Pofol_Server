@@ -13,14 +13,15 @@ import {
 import { Request, Response } from 'express';
 import {
   GenerateKakaoTokenUseCase,
+  LoginUseCase,
   SignupUseCase,
 } from '../../core/auth/port/auth.in.port';
 import { SignupRequest } from './dto/auth.request';
 
 @Controller('auth')
-export class AuthController {
+export class SignupController {
   constructor(
-    @Inject('auth')
+    @Inject('signup')
     private readonly signupUseCase: SignupUseCase,
     @Inject('kakao')
     private readonly generateKakaoTokenUseCase: GenerateKakaoTokenUseCase,
@@ -80,6 +81,35 @@ export class AuthController {
     return res
       .status(200)
       .json(await this.generateKakaoTokenUseCase.generateKakaoToken(code))
+      .send();
+  }
+}
+
+@Controller('auth')
+export class LoginController {
+  constructor(
+    @Inject('login')
+    private readonly loginUseCase: LoginUseCase,
+  ) {}
+
+  @Get('/facebook/login')
+  async facebookLogin(
+    @Headers('OA-TOKEN') token: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token) throw new BadRequestException('OA-TOKEN: null일 수 없습니다.');
+
+    const { access_token, refresh_token } =
+      await this.loginUseCase.loginWithFacebook(token);
+
+    return res
+      .status(200)
+      .header('Authorization', `Bearer ${access_token}`)
+      .cookie('RF-TOKEN', refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      })
       .send();
   }
 }

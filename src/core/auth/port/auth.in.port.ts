@@ -1,5 +1,5 @@
 import { SignupRequest } from '../../../presentation/auth/dto/auth.request';
-import { KakaoTokenResponse } from '../../../presentation/auth/dto/auth.response';
+import { KakaoTokenResponse, TokenResponse } from '../../../presentation/auth/dto/auth.response';
 
 export interface SignupUseCase {
   signupWithGoogle(token: string, req: SignupRequest): Promise<void>;
@@ -9,4 +9,8 @@ export interface SignupUseCase {
 
 export interface GenerateKakaoTokenUseCase {
   generateKakaoToken(code: string): Promise<KakaoTokenResponse>;
+}
+
+export interface LoginUseCase {
+  loginWithFacebook(token: string): Promise<TokenResponse>;
 }
