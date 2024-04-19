@@ -34,7 +34,7 @@ export class User {
   @Column({ nullable: true })
   generation?: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 305 })
   profileImage?: string;
 
   @OneToMany(() => Post, (post) => post.user)

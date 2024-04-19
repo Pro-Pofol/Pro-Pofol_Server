@@ -49,6 +49,28 @@ export class SignupController {
     return res.status(201).location(location).send();
   }
 
+  @Post('/facebook/signup') // API-Auth-102
+  async facebookSignup(
+    @Headers('OA-TOKEN') token: string,
+    @Req() req: Request,
+    @Body() dto: SignupRequest,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token) throw new BadRequestException('OA-TOKEN: null일 수 없습니다.');
+
+    await this.signupUseCase.signupWithFacebook(token, dto);
+
+    let location: string;
+
+    if (req.hostname != 'localhost') {
+      location = `${req.protocol}://${req.hostname}/auth/facebook/login`;
+    } else {
+      location = `${req.protocol}://${req.hostname}:${process.env.PORT}/auth/facebook/login`;
+    }
+
+    return res.status(201).location(location).send();
+  }
+
   @Post('/kakao/signup') // API-Auth-202
   async kakaoSignup(
     @Headers('OA-TOKEN') token: string,
