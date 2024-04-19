@@ -6,6 +6,7 @@ import {
   ReadFacebookProfilePort,
   ReadGoogleProfilePort,
   ReadKakaoProfilePort,
+  RevokeKakaoTokenPort,
 } from './port/auth.out.port';
 import { User } from '../../domain/user/user.entity';
 import { ExistsUserPort, SaveUserPort } from '../user/port/user.out.port';
@@ -121,12 +122,28 @@ export class LoginService implements LoginUseCase {
     private readonly existsUserPort: ExistsUserPort,
     @Inject('facebook')
     private readonly readFacebookProfilePort: ReadFacebookProfilePort,
+    @Inject('kakao')
+    private readonly readKakaoProfilePort: ReadKakaoProfilePort,
+    @Inject('kakao')
+    private readonly revokeKakaoTokenPort: RevokeKakaoTokenPort,
   ) {}
 
   loginWithFacebook = async (token: string): Promise<TokenResponse> => {
     const profile = await this.readFacebookProfilePort.getFacebookProfile(
       token,
     );
+
+    if (!(await this.existsUserPort.existsByOauthId(profile.id))) {
+      throw new ConflictException('User does not sign up');
+    }
+
+    await this.revokeKakaoTokenPort.revokeKakaoToken(token);
+
+    return await this.generateTokensPort.generateTokens(profile.id);
+  };
+
+  loginWithKakao = async (token: string): Promise<TokenResponse> => {
+    const profile = await this.readKakaoProfilePort.getKakaoProfile(token);
 
     if (!(await this.existsUserPort.existsByOauthId(profile.id))) {
       throw new ConflictException('User does not sign up');

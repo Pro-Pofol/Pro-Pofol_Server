@@ -15,4 +15,6 @@ export interface GenerateKakaoTokenUseCase {
 
 export interface LoginUseCase {
   loginWithFacebook(token: string): Promise<TokenResponse>;
+
+  loginWithKakao(token: string): Promise<TokenResponse>;
 }
