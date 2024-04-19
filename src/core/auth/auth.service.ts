@@ -22,6 +22,8 @@ export class SignupService implements SignupUseCase {
     private readonly readGoogleProfilePort: ReadGoogleProfilePort,
     @Inject('kakao')
     private readonly readKakaoProfilePort: ReadKakaoProfilePort,
+    @Inject('facebook')
+    private readonly readFacebookProfilePort: ReadFacebookProfilePort,
   ) {}
 
   signupWithGoogle = async (token: string, req: SignupRequest) => {
@@ -68,6 +70,36 @@ export class SignupService implements SignupUseCase {
       req.major,
       req.generation,
       req.profile_image_url ?? profile.properties.profile_image,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    );
+
+    await this.saveUserPort.save(user);
+  };
+
+  signupWithFacebook = async (token: string, req: SignupRequest) => {
+    const profile = await this.readFacebookProfilePort.getFacebookProfile(
+      token,
+    );
+
+    if (await this.existsUserPort.existsByOauthId(profile.id)) {
+      throw new ConflictException('Already registered');
+    }
+
+    const user = new User(
+      null,
+      null,
+      profile.id,
+      req.name ?? profile.name,
+      req.major,
+      req.generation,
+      req.profile_image_url ??
+        (await this.readFacebookProfilePort.getFacebookProfileImage(token)).data
+          .url,
       null,
       null,
       null,

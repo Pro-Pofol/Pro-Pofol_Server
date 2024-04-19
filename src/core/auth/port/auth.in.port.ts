@@ -5,6 +5,8 @@ export interface SignupUseCase {
   signupWithGoogle(token: string, req: SignupRequest): Promise<void>;
 
   signupWithKakao(token: string, req: SignupRequest): Promise<void>;
+
+  signupWithFacebook(token: string, req: SignupRequest): Promise<void>;
 }
 
 export interface GenerateKakaoTokenUseCase {
