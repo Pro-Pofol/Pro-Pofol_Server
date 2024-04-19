@@ -1,6 +1,7 @@
 import { User } from '../../../domain/user/user.entity';
 import {
   FacebookInfoResponse,
+  FacebookProfileImageResponse,
   GoogleProfileResponse,
   KakaoProfileResponse,
   TokenResponse,
@@ -24,6 +25,8 @@ export interface ReadKakaoProfilePort {
 
 export interface ReadFacebookProfilePort {
   getFacebookProfile(token: string): Promise<FacebookInfoResponse>;
+
+  getFacebookProfileImage(token: string): Promise<FacebookProfileImageResponse>;
 }
 
 export interface ReissuePort {

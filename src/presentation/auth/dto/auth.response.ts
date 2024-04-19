@@ -36,3 +36,9 @@ export class FacebookInfoResponse {
   id: string;
   name: string;
 }
+
+export class FacebookProfileImageResponse {
+  data: {
+    url: string;
+  };
+}
