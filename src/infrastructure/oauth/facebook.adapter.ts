@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import axios, { AxiosError } from 'axios';
 import { ReadFacebookProfilePort } from 'src/core/auth/port/auth.out.port';
 import { FacebookInfoResponse } from 'src/presentation/auth/dto/auth.response';
@@ -19,16 +14,10 @@ export class FacebookAuthAdaptor implements ReadFacebookProfilePort {
       })
       .catch((e: AxiosError) => {
         this.logger.error(e.message);
+        this.logger.error(e.response?.status ?? e.status);
         this.logger.error(e.response?.data);
 
-        if (e.response?.status == 401) {
-          throw new UnauthorizedException(e.response?.data ?? 'Invalid Token');
-        } else {
-          this.logger.error(e.response?.status ?? e.status);
-          throw new InternalServerErrorException(
-            'Some thing went worn in OAuth',
-          );
-        }
+        throw new UnauthorizedException(e.response?.data ?? 'Invalid Token');
       });
     return response.data;
   };
