@@ -36,3 +36,7 @@ export interface ReadFacebookProfilePort {
 export interface ReissuePort {
   reissue(rfToken: string): Promise<TokenResponse>;
 }
+
+export interface RevokeGoogleTokenPort {
+  revokeGoogleToken(token: string): Promise<void>;
+}
