@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject } from '@nestjs/common';
 import { LoginUseCase, SignupUseCase } from './port/auth.in.port';
 import { SignupRequest } from '../../presentation/auth/dto/auth.request';
 import {
@@ -13,7 +13,6 @@ import { User } from '../../domain/user/user.entity';
 import { ExistsUserPort, SaveUserPort } from '../user/port/user.out.port';
 import { TokenResponse } from 'src/presentation/auth/dto/auth.response';
 
-@Injectable()
 export class SignupService implements SignupUseCase {
   constructor(
     @Inject('user out port')
@@ -114,7 +113,6 @@ export class SignupService implements SignupUseCase {
   };
 }
 
-@Injectable()
 export class LoginService implements LoginUseCase {
   constructor(
     @Inject('jwt')

@@ -1,5 +1,8 @@
 import { SignupRequest } from '../../../presentation/auth/dto/auth.request';
-import { KakaoTokenResponse, TokenResponse } from '../../../presentation/auth/dto/auth.response';
+import {
+  KakaoTokenResponse,
+  TokenResponse,
+} from '../../../presentation/auth/dto/auth.response';
 
 export interface SignupUseCase {
   signupWithGoogle(token: string, req: SignupRequest): Promise<void>;
