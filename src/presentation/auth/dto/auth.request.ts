@@ -1,10 +1,5 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-import { Major } from '../../../common/enums';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Major } from '../../../domain/post/post.entity';
 
 export class SignupRequest {
   @IsString({

@@ -1,7 +1,6 @@
-import { Major } from 'src/common/enums';
 import { Follow } from 'src/domain/follow/follow.entity';
 import { PostLike } from 'src/domain/post-like/post-like.entity';
-import { Post } from 'src/domain/post/post.entity';
+import { Major, Post } from 'src/domain/post/post.entity';
 import { TipLike } from 'src/domain/tip-like/tip-like.entity';
 import { Tip } from 'src/domain/tip/tip.entity';
 import {
@@ -12,6 +11,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { v4 } from 'uuid';
+import { Length } from 'class-validator';
 
 @Entity('tbl_user')
 export class User {
@@ -27,6 +27,7 @@ export class User {
   @Column()
   name: string;
 
+  @Length(0, 8)
   @Column({ nullable: true, type: 'enum', enum: Major })
   major?: Major;
 
