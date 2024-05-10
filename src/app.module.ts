@@ -11,6 +11,7 @@ import { AuthModule } from './core/auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { HTTPLoggerMiddleware } from './infrastructure/config/HTTP-logger.middleware';
 import { redisConfig, typeORMConfig } from './infrastructure/config/db.config';
+import { JwtCustomModule } from './infrastructure/jwt/jwt.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { redisConfig, typeORMConfig } from './infrastructure/config/db.config';
     PostLikeModule,
     TipLikeModule,
     AuthModule,
+    JwtCustomModule,
     TypeOrmModule.forRoot(typeORMConfig),
     RedisModule.forRoot(redisConfig),
   ],
