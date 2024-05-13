@@ -23,7 +23,6 @@ import { JwtModule } from '@nestjs/jwt';
     { provide: 'post out port', useClass: PostRepository },
     { provide: 'user out port', useClass: UserRepository },
     { provide: 'jwt', useClass: JwtAdapter },
-    { provide: 'user out port', useClass: UserRepository },
   ],
   controllers: [PostController],
 })

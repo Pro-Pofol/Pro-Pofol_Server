@@ -1,4 +1,4 @@
-import { PostLinkRequest } from '../../../presentation/post/dto/post.request';
+import { PostFileRequest, PostLinkRequest } from '../../../presentation/post/dto/post.request';
 
 export interface PostLinkUseCase {
   postLink(req: PostLinkRequest, token: string): Promise<void>;
@@ -6,9 +6,8 @@ export interface PostLinkUseCase {
 
 export interface PostFileUseCase {
   postFile(
-    title: string,
-    type: string,
-    major: string,
+    dto: PostFileRequest,
     token: string,
-  ): Promise<void>;
+    file: Express.Multer.File,
+  ): Promise<string>;
 }
