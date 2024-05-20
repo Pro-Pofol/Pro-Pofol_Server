@@ -3,12 +3,9 @@ FROM node:18 AS install
 WORKDIR /app
 COPY package*.json ./
 
-RUN npm install
+RUN npm install -f
 
 COPY . .
-
-ARG NODE_ENV production
-ENV NODE_ENV NODE_ENV
 
 RUN npm run build
 

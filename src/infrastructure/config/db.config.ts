@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { RedisModuleOptions } from '@liaoliaots/nestjs-redis';
+import { RedisModuleOptions } from '@songkeys/nestjs-redis';
 import { configDotenv } from 'dotenv';
 
 configDotenv();
@@ -17,13 +17,12 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   synchronize: true,
   autoLoadEntities: true,
   logging: true,
-  timezone: 'Asia/Seoul',
+  timezone: '+9:00',
 };
 
 export const redisConfig: RedisModuleOptions = {
   readyLog: true,
   config: {
-    username: process.env.REDIS_USER,
     host: process.env.REDIS_HOST,
     port: Number(process.env.REDIS_PORT),
   },

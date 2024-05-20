@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TokenResponse } from '../../presentation/auth/dto/auth.response';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { InjectRedis } from '@songkeys/nestjs-redis';
 import { Redis } from 'ioredis';
 import {
   GenerateTokensPort,
