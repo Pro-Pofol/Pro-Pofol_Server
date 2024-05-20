@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PostController } from '../../presentation/post/post.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from '../../domain/post/post.entity';
-import { PostLinkService } from './post.service';
+import { PostFileService, PostLinkService } from './post.service';
 import { PostRepository } from '../../domain/post/post.repository';
 import { JwtAdapter } from '../../infrastructure/jwt/jwt.adapter';
 import { UserRepository } from 'src/domain/user/user.repository';
@@ -19,6 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
   ],
   providers: [
     { provide: 'postLink', useClass: PostLinkService },
+    { provide: 'postFile', useClass: PostFileService },
     { provide: 'post out port', useClass: PostRepository },
     { provide: 'user out port', useClass: UserRepository },
     { provide: 'jwt', useClass: JwtAdapter },

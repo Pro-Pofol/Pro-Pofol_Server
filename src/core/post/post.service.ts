@@ -1,9 +1,15 @@
-import { PostLinkUseCase } from './port/post.in.port';
-import { PostLinkRequest } from '../../presentation/post/dto/post.request';
+import { PostFileUseCase, PostLinkUseCase } from './port/post.in.port';
+import {
+  PostFileRequest,
+  PostLinkRequest,
+} from '../../presentation/post/dto/post.request';
 import { Post } from '../../domain/post/post.entity';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
 import { SavePostPort } from './port/post.out.port';
-import { Inject } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
+import { ManagedUpload, PutObjectRequest } from 'aws-sdk/clients/s3';
+import { InjectAwsService } from 'nest-aws-sdk';
+import { S3 } from 'aws-sdk';
 
 export class PostLinkService implements PostLinkUseCase {
   constructor(
@@ -30,5 +36,56 @@ export class PostLinkService implements PostLinkUseCase {
     );
 
     await this.savePostPort.save(post);
+  };
+}
+
+export class PostFileService implements PostFileUseCase {
+  constructor(
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+    @Inject('post out port')
+    private readonly savePostPort: SavePostPort,
+    @InjectAwsService(S3) private readonly s3: S3,
+  ) {}
+
+  postFile = async (
+    dto: PostFileRequest,
+    token: string,
+    file: Express.Multer.File,
+  ): Promise<string> => {
+    const user = await this.readCurrentUserPort.verifyUser(token);
+
+    const params: PutObjectRequest = {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      Bucket: process.env.AWS_S3_BUCKET_NAME!,
+      Key: String(file.originalname),
+      Body: file.buffer,
+    };
+
+    let response: ManagedUpload.SendData;
+
+    try {
+      response = await this.s3.upload(params).promise();
+    } catch (err) {
+      console.error(err);
+      throw new BadRequestException('파일 업로드 실패');
+    }
+
+    const post = new Post(
+      null,
+      user.id,
+      dto.type,
+      dto.title,
+      null,
+      null,
+      dto.major,
+      null,
+      user,
+      null,
+    );
+
+    await this.savePostPort.save(post);
+
+    return response.Location;
   };
 }

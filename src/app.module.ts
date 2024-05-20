@@ -12,6 +12,8 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { HTTPLoggerMiddleware } from './infrastructure/config/HTTP-logger.middleware';
 import { redisConfig, typeORMConfig } from './infrastructure/config/db.config';
 import { JwtCustomModule } from './infrastructure/jwt/jwt.module';
+import { Credentials, S3 } from 'aws-sdk';
+import { AwsSdkModule } from 'nest-aws-sdk';
 
 @Module({
   imports: [
@@ -28,6 +30,18 @@ import { JwtCustomModule } from './infrastructure/jwt/jwt.module';
     TipLikeModule,
     AuthModule,
     JwtCustomModule,
+    AwsSdkModule.forRoot({
+      defaultServiceOptions: {
+        region: 'ap-northeast-2',
+        credentials: new Credentials({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          accessKeyId: process.env.AWS_ACCESS_KEY!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          secretAccessKey: process.env.AWS_SECRET_KEY!,
+        }),
+      },
+      services: [S3],
+    }),
     TypeOrmModule.forRoot(typeORMConfig),
     RedisModule.forRoot(redisConfig),
   ],

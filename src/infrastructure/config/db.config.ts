@@ -23,6 +23,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
 export const redisConfig: RedisModuleOptions = {
   readyLog: true,
   config: {
+    username: process.env.REDIS_USER,
     host: process.env.REDIS_HOST,
     port: Number(process.env.REDIS_PORT),
   },
