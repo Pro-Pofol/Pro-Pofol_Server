@@ -1,11 +1,15 @@
-import { PostFileUseCase, PostLinkUseCase } from './port/post.in.port';
+import {
+  PostFileUseCase,
+  PostLinkUseCase,
+  ReadDetailPostUseCase,
+} from './port/post.in.port';
 import {
   PostFileRequest,
   PostLinkRequest,
 } from '../../presentation/post/dto/post.request';
 import { Post } from '../../domain/post/post.entity';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
-import { SavePostPort } from './port/post.out.port';
+import { ReadPostPort, SavePostPort } from './port/post.out.port';
 import { BadRequestException, Inject } from '@nestjs/common';
 import { ManagedUpload, PutObjectRequest } from 'aws-sdk/clients/s3';
 import { InjectAwsService } from 'nest-aws-sdk';
@@ -76,7 +80,7 @@ export class PostFileService implements PostFileUseCase {
       user.id,
       dto.type,
       dto.title,
-      null,
+      response.Location,
       null,
       dto.major,
       null,
@@ -87,5 +91,26 @@ export class PostFileService implements PostFileUseCase {
     await this.savePostPort.save(post);
 
     return response.Location;
+  };
+}
+
+export class ReadDetailPostService implements ReadDetailPostUseCase {
+  constructor(
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+    @Inject('post out port')
+    private readonly readPostPort: ReadPostPort,
+  ) {}
+
+  readDetailPost = async (
+    postId: number,
+    token: string,
+  ): Promise<object | null | undefined> => {
+    await this.readCurrentUserPort.verifyUser(token);
+
+    await this.readPostPort.readByIdOrFail(postId);
+
+
+    return await this.readPostPort.readDetailPost(postId);
   };
 }
