@@ -2,6 +2,7 @@ import {
   PostFileUseCase,
   PostLinkUseCase,
   ReadDetailPostUseCase,
+  RemovePostUseCase,
 } from './port/post.in.port';
 import {
   PostFileRequest,
@@ -9,8 +10,16 @@ import {
 } from '../../presentation/post/dto/post.request';
 import { Post } from '../../domain/post/post.entity';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
-import { ReadPostPort, SavePostPort } from './port/post.out.port';
-import { BadRequestException, Inject } from '@nestjs/common';
+import {
+  ReadPostPort,
+  RemovePostPort,
+  SavePostPort,
+} from './port/post.out.port';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+} from '@nestjs/common';
 import { ManagedUpload, PutObjectRequest } from 'aws-sdk/clients/s3';
 import { InjectAwsService } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
@@ -110,7 +119,26 @@ export class ReadDetailPostService implements ReadDetailPostUseCase {
 
     await this.readPostPort.readByIdOrFail(postId);
 
-
     return await this.readPostPort.readDetailPost(postId);
+  };
+}
+
+export class RemovePostService implements RemovePostUseCase {
+  constructor(
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+    @Inject('post out port')
+    private readonly readPostPort: ReadPostPort,
+    @Inject('post out port')
+    private readonly removePostPort: RemovePostPort,
+  ) {}
+
+  removePost = async (postId: number, token: string): Promise<void> => {
+    const user = await this.readCurrentUserPort.verifyUser(token);
+
+    if ((await this.readPostPort.readByIdOrFail(postId)).writerId !== user.id)
+      throw new ForbiddenException('작성자가 아님');
+
+    await this.removePostPort.delete(postId);
   };
 }
