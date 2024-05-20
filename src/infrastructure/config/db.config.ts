@@ -1,8 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RedisModuleOptions } from '@liaoliaots/nestjs-redis';
-import { configDotenv } from 'dotenv';
-
-configDotenv();
+import * as dotenv from 'dotenv';
+dotenv.config({ path: `.${process.env.NODE_ENV}.env` });
 
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -14,10 +13,10 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   entities: [__dirname + '/**/entity/*.js'],
   migrations: [__dirname + '/**/migrations/*.js'],
   migrationsTableName: 'migrations',
-  synchronize: true,
+  synchronize: false,
   autoLoadEntities: true,
   logging: true,
-  timezone: 'Asia/Seoul',
+  timezone: '+09:00',
 };
 
 export const redisConfig: RedisModuleOptions = {
