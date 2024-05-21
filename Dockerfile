@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/dist ./dist
 
-ARG NODE_ENV production
+ARG NODE_ENV=production
 ENV NODE_ENV NODE_ENV
 
 CMD ["node", "dist/main.js"]
