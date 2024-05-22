@@ -2,10 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './post.entity';
-import { ReadPostPort, SavePostPort } from '../../core/post/port/post.out.port';
+import {
+  ReadPostPort,
+  RemovePostPort,
+  SavePostPort,
+} from '../../core/post/port/post.out.port';
 
 @Injectable()
-export class PostRepository implements SavePostPort, ReadPostPort {
+export class PostRepository
+  implements SavePostPort, ReadPostPort, RemovePostPort
+{
   constructor(
     @InjectRepository(Post) private readonly postEntity: Repository<Post>,
   ) {}
@@ -22,7 +28,9 @@ export class PostRepository implements SavePostPort, ReadPostPort {
     return post;
   };
 
-  readDetailPost = async (postId: number): Promise<object | null | undefined> => {
+  readDetailPost = async (
+    postId: number,
+  ): Promise<object | null | undefined> => {
     return await this.postEntity
       .createQueryBuilder('post')
       .innerJoin('post.user', 'user', 'user.id = post.writerId')
@@ -38,5 +46,9 @@ export class PostRepository implements SavePostPort, ReadPostPort {
       ])
       .where('post.id = :id', { id: postId })
       .getRawOne();
+  };
+
+  delete = async (postId: number): Promise<void> => {
+    await this.postEntity.delete(postId);
   };
 }

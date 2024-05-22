@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Inject,
@@ -14,6 +15,7 @@ import {
   PostFileUseCase,
   PostLinkUseCase,
   ReadDetailPostUseCase,
+  RemovePostUseCase,
 } from '../../core/post/port/post.in.port';
 import { Response } from 'express';
 import { PostFileRequest, PostLinkRequest } from './dto/post.request';
@@ -28,6 +30,8 @@ export class PostController {
     private readonly postFileUseCase: PostFileUseCase,
     @Inject('readDetailPost')
     private readonly readDetailPostUseCase: ReadDetailPostUseCase,
+    @Inject('removePost')
+    private readonly removePostUseCase: RemovePostUseCase,
   ) {}
 
   @Post('/link')
@@ -65,5 +69,16 @@ export class PostController {
       .status(200)
       .json(await this.readDetailPostUseCase.readDetailPost(postId, token))
       .send();
+  }
+
+  @Delete('/:postId')
+  async removePost(
+    @Param('postId') postId: number,
+    @Res() res: Response,
+    @Headers('Authorization') token: string,
+  ): Promise<Response> {
+    await this.removePostUseCase.removePost(postId, token);
+
+    return res.status(204).send();
   }
 }

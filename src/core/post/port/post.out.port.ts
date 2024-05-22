@@ -9,3 +9,7 @@ export interface ReadPostPort {
 
   readDetailPost(postId: number): Promise<object | null | undefined>;
 }
+
+export interface RemovePostPort {
+  delete(postId: number): Promise<void>;
+}
