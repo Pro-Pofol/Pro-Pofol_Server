@@ -17,7 +17,25 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
-  //app.enableCors();
+  app.enableCors({
+    credentials: true,
+    origin: ['http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: [
+      'Content-Type',
+      'OA-TOKEN',
+      'Content-Length',
+      'X-Requested-With',
+      'Accept',
+      'Accept-Encoding',
+      'Accept-Language',
+      'Accept-Headers',
+      'User-Agent',
+      'Host',
+      'Connection',
+    ],
+    exposedHeaders: ['Authorization', 'OA-TOKEN'],
+  });
 
   const port = Number(process.env.PORT);
   await app.listen(port);
