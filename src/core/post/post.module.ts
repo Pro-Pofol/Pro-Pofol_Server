@@ -5,7 +5,8 @@ import { Post } from '../../domain/post/post.entity';
 import {
   PostFileService,
   PostLinkService,
-  ReadDetailPostService, RemovePostService,
+  ReadDetailPostService,
+  RemovePostService,
 } from './post.service';
 import { PostRepository } from '../../domain/post/post.repository';
 import { JwtAdapter } from '../../infrastructure/jwt/jwt.adapter';

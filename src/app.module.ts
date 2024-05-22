@@ -16,7 +16,7 @@ import { JwtCustomModule } from './infrastructure/jwt/jwt.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: './.env',
+      envFilePath: `./.${process.env.NODE_ENV}.env`,
       isGlobal: true,
       cache: true,
     }),
