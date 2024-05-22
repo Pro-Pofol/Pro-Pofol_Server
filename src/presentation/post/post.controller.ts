@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   Headers,
   Inject,
+  Param,
   Post,
   Res,
   UploadedFile,
@@ -11,6 +13,7 @@ import {
 import {
   PostFileUseCase,
   PostLinkUseCase,
+  ReadDetailPostUseCase,
 } from '../../core/post/port/post.in.port';
 import { Response } from 'express';
 import { PostFileRequest, PostLinkRequest } from './dto/post.request';
@@ -23,6 +26,8 @@ export class PostController {
     private readonly postLinkUseCase: PostLinkUseCase,
     @Inject('postFile')
     private readonly postFileUseCase: PostFileUseCase,
+    @Inject('readDetailPost')
+    private readonly readDetailPostUseCase: ReadDetailPostUseCase,
   ) {}
 
   @Post('/link')
@@ -47,6 +52,18 @@ export class PostController {
     return res
       .status(201)
       .location(await this.postFileUseCase.postFile(dto, token, file))
+      .send();
+  }
+
+  @Get('/read/:postId')
+  async readDetailPost(
+    @Param('postId') postId: number,
+    @Res() res: Response,
+    @Headers('Authorization') token: string,
+  ): Promise<Response> {
+    return res
+      .status(200)
+      .json(await this.readDetailPostUseCase.readDetailPost(postId, token))
       .send();
   }
 }
