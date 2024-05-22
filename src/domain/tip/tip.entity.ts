@@ -35,4 +35,11 @@ export class Tip {
 
   @OneToMany(() => TipLike, (tipLike) => tipLike.tip)
   tipLike: TipLike;
+
+  constructor(title: string, content: string, user: User, id?: number) {
+    this.title = title;
+    this.content = content;
+    this.user = user;
+    if (id) this.id = id;
+  }
 }
