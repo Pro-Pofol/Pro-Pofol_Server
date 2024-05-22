@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
@@ -29,7 +30,6 @@ export class KakaoAuthAdapter
     const response = await axios
       .get<KakaoProfileResponse>('https://kapi.kakao.com/v2/user/me', {
         headers: { Authorization: `Bearer ${token}` },
-        params: { property_keys: '["kakao_account.profile"]' },
       })
       .catch((e: AxiosError) => {
         this.logger.error(e.message);
@@ -54,20 +54,22 @@ export class KakaoAuthAdapter
 
   generateKakaoToken = async (code: string): Promise<KakaoTokenResponse> => {
     const response = await axios
-      .post<KakaoTokenResponse>('https://kauth.kakao.com/oauth/token', {
-        params: {
-          code: code,
-          client_id: process.env.KAKAO_CLIENT_ID,
-          grant_type: 'authorization_code',
-          client_secret: process.env.KAKAO_SECRET_CLIENT_SECRET,
-          redirect_uri: process.env.KAKAO_REDIRECT_URI,
+      .post<KakaoTokenResponse>(
+        `https://kauth.kakao.com/oauth/token?code=${code}&client_id=${process.env.KAKAO_CLIENT_ID}&client_secret=${process.env.KAKAO_SECRET_KEY}&redirect_uri=${process.env.KAKAO_REDIRECT_URI}&grant_type=authorization_code`,
+        {},
+        {
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+          },
         },
-      })
+      )
       .catch((e: AxiosError) => {
         this.logger.error(e.message);
         this.logger.error(e.response?.data);
 
-        if (e.response?.status == 401) {
+        if (e.response?.status == 400) {
+          throw new BadRequestException(e.response?.data ?? 'Invalid code');
+        } else if (e.response?.status == 401) {
           throw new UnauthorizedException(e.response?.data ?? 'Invalid code');
         } else if (e.response?.status == 403) {
           throw new ForbiddenException(
