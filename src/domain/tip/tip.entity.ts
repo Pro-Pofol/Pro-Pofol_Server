@@ -15,8 +15,8 @@ export class Tip {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'writer_id' })
-  writer_id: number;
+  @Column({ name: 'writer_id', length: 21 })
+  writer_id: string;
 
   @Column()
   title: string;

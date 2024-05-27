@@ -20,14 +20,14 @@ export class FollowController {
   @Post('/users/follow/:oauthId')
   async follow(
     @Headers('Authorization') token: string,
-    @Param('oauth_id') oauth_id: string,
+    @Param('id') id: string,
     @Res() res: Response,
   ): Promise<Response> {
     if (!token) {
       throw new UnauthorizedException('Permission denied');
     }
 
-    await this.followUserUseCase.follow(oauth_id, token);
+    await this.followUserUseCase.follow(id, token);
 
     return res.sendStatus(200);
   }

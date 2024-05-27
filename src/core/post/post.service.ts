@@ -36,7 +36,6 @@ export class PostLinkService implements PostLinkUseCase {
       user.id,
       req.type,
       req.title,
-      null,
       req.link,
       req.major,
       null,
@@ -65,7 +64,7 @@ export class PostFileService implements PostFileUseCase {
     const user = await this.readCurrentUserPort.verifyUser(token);
 
     const response = await this.awsService.fileUploadToS3(
-      user.oauth_id + '/' + v4(),
+      user.id + '/' + v4(),
       file,
     );
 
@@ -75,7 +74,6 @@ export class PostFileService implements PostFileUseCase {
       dto.type,
       dto.title,
       response,
-      null,
       dto.major,
       null,
       user,

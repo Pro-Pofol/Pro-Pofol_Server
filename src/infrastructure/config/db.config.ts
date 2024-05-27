@@ -13,7 +13,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   entities: [__dirname + '/**/entity/*.js'],
   migrations: [__dirname + '/**/migrations/*.js'],
   migrationsTableName: 'migrations',
-  synchronize: false,
+  synchronize: true,
   autoLoadEntities: true,
   logging: true,
   timezone: '+9:00',

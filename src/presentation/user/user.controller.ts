@@ -1,4 +1,12 @@
-import { Controller, Get, Headers, Inject, Param, Res, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Inject,
+  Param,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { GetUserInfoUseCase } from '../../core/user/port/user.in.port';
 import { Response } from 'express';
 
@@ -23,13 +31,13 @@ export class UserController {
       .sendStatus(200);
   }
 
-  @Get('/users/:oauthId')
+  @Get('/users/:id')
   async getUserInfo(
-    @Param('oauth_id') oauth_id: string,
+    @Param('id') id: string,
     @Res() res: Response,
   ): Promise<Response> {
     return res
-      .json(await this.getUserInfoUseCase.getUserInfo(oauth_id))
+      .json(await this.getUserInfoUseCase.getUserInfo(id))
       .sendStatus(200);
   }
 }

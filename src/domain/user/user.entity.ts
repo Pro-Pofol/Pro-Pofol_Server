@@ -3,26 +3,13 @@ import { PostLike } from 'src/domain/post-like/post-like.entity';
 import { Major, Post } from 'src/domain/post/post.entity';
 import { TipLike } from 'src/domain/tip-like/tip-like.entity';
 import { Tip } from 'src/domain/tip/tip.entity';
-import {
-  Column,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { v4 } from 'uuid';
+import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 import { Length } from 'class-validator';
 
 @Entity('tbl_user')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ name: 'uuid', type: 'binary', length: 36 })
-  uuid: string;
-
-  @Column({ name: 'oauth_id', unique: true })
-  oauth_id: string;
+  @PrimaryColumn({ name: 'id', length: 21 })
+  id: string;
 
   @Column()
   name: string;
@@ -35,7 +22,7 @@ export class User {
   @Column({ nullable: true })
   generation?: number;
 
-  @Column({ name: 'profile_image', nullable: true, length: 305 })
+  @Column({ name: 'profile_image', nullable: true, length: 500 })
   profile_image?: string;
 
   @OneToMany(() => Post, (post) => post.user)
@@ -57,9 +44,7 @@ export class User {
   target?: Follow[] | null;
 
   constructor(
-    id: number | null,
-    uuid: string | null,
-    oauth_id: string,
+    id: string,
     name: string,
     major: Major,
     generation: number,
@@ -71,10 +56,7 @@ export class User {
     follower?: Follow[] | null,
     target?: Follow[] | null,
   ) {
-    if (id) this.id = id;
-    if (uuid) this.uuid = uuid;
-    else this.uuid = v4();
-    this.oauth_id = oauth_id;
+    this.id = id;
     this.name = name;
     this.major = major;
     this.generation = generation;

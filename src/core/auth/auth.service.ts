@@ -30,20 +30,16 @@ export class SignupService implements SignupUseCase {
   signupWithGoogle = async (token: string, req: SignupRequest) => {
     const profile = await this.readGoogleProfilePort.getGoogleProfile(token);
 
-    if (await this.existsUserPort.existsByOauthId(profile.sub)) {
+    if (await this.existsUserPort.existsById(profile.sub)) {
       throw new ConflictException('Already registered');
     }
 
     const user = new User(
-      null,
-      null,
       profile.sub,
       req.name ?? profile.name,
       req.major,
       req.generation,
       req.profile_image_url ?? profile.picture,
-      null,
-      null,
       null,
       null,
       null,
@@ -59,13 +55,11 @@ export class SignupService implements SignupUseCase {
   ): Promise<void> => {
     const profile = await this.readKakaoProfilePort.getKakaoProfile(token);
 
-    if (await this.existsUserPort.existsByOauthId(profile.id)) {
+    if (await this.existsUserPort.existsById(profile.id)) {
       throw new ConflictException('Already registered');
     }
 
     const user = new User(
-      null,
-      null,
       profile.id,
       req.name ?? profile.properties.nickname,
       req.major,
@@ -86,13 +80,11 @@ export class SignupService implements SignupUseCase {
     const profile =
       await this.readFacebookProfilePort.getFacebookProfile(token);
 
-    if (await this.existsUserPort.existsByOauthId(profile.id)) {
+    if (await this.existsUserPort.existsById(profile.id)) {
       throw new ConflictException('Already registered');
     }
 
     const user = new User(
-      null,
-      null,
       profile.id,
       req.name ?? profile.name,
       req.major,
@@ -134,7 +126,7 @@ export class LoginService implements LoginUseCase {
     const profile =
       await this.readFacebookProfilePort.getFacebookProfile(token);
 
-    if (!(await this.existsUserPort.existsByOauthId(profile.id))) {
+    if (!(await this.existsUserPort.existsById(profile.id))) {
       throw new ConflictException('User does not sign up');
     }
 
@@ -146,7 +138,7 @@ export class LoginService implements LoginUseCase {
   loginWithKakao = async (token: string): Promise<TokenResponse> => {
     const profile = await this.readKakaoProfilePort.getKakaoProfile(token);
 
-    if (!(await this.existsUserPort.existsByOauthId(profile.id))) {
+    if (!(await this.existsUserPort.existsById(profile.id))) {
       throw new ConflictException('User does not sign up');
     }
 
@@ -156,7 +148,7 @@ export class LoginService implements LoginUseCase {
   loginWithGoogle = async (token: string): Promise<TokenResponse> => {
     const profile = await this.readGoogleProfilePort.getGoogleProfile(token);
 
-    if (!(await this.existsUserPort.existsByOauthId(profile.sub))) {
+    if (!(await this.existsUserPort.existsById(profile.sub))) {
       throw new ConflictException('User does not sign up');
     }
 

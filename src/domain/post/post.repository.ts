@@ -33,13 +33,11 @@ export class PostRepository
   ): Promise<object | null | undefined> => {
     return await this.postEntity
       .createQueryBuilder('post')
-      .innerJoin('post.user', 'user', 'user.id = post.writer_id')
       .select([
-        'user.oauth_id',
+        'post.writer_id',
         'post.id',
         'post.post_type',
         'post.title',
-        'post.content',
         'post.link',
         'post.major',
         'post.created_at',
@@ -51,12 +49,11 @@ export class PostRepository
   readAllByRandom = async (): Promise<object[]> => {
     return await this.postEntity
       .createQueryBuilder('post')
-      .innerJoin('post.user', 'user', 'user.id = post.writer_id')
       .select([
         'post.id',
         'post.title',
         'post.post_type',
-        'user.oauth_id',
+        'post.writer_id',
         'post.created_at',
         'post.major',
       ])

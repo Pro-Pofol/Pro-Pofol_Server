@@ -12,11 +12,11 @@ export class GetUserInfoService implements GetUserInfoUseCase {
     private readonly readCurrentUserPort: ReadCurrentUserPort,
   ) {}
 
-  getUserInfo = async (oauth_id: string): Promise<UserResponse> => {
-    const user = await this.readUserPort.findByOauthIdOrFail(oauth_id);
+  getUserInfo = async (id: string): Promise<UserResponse> => {
+    const user = await this.readUserPort.findByIdOrFail(id);
 
     return new UserResponse(
-      user.oauth_id,
+      user.id,
       user.name,
       user.generation,
       user.profile_image,
@@ -28,7 +28,7 @@ export class GetUserInfoService implements GetUserInfoUseCase {
     const user = await this.readCurrentUserPort.verifyUser(token);
 
     return new UserResponse(
-      user.oauth_id,
+      user.id,
       user.name,
       user.generation,
       user.profile_image,

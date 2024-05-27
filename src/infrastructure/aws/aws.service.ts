@@ -33,10 +33,10 @@ export class AwsService {
       Bucket: process.env.AWS_S3_BUCKET_NAME!,
       Key: fileName,
       Body: file.buffer,
+      ContentType: 'application/octet-stream',
     };
     const data = await this.s3.upload(params).promise();
 
-    // return `https://s3.ap-northeast-2.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/${fileName}`;
     return data.Location;
   }
 }

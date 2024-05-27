@@ -23,10 +23,10 @@ export class FollowUserService implements FollowUserUseCase {
     private readonly readFollowPort: ReadFollowPort,
   ) {}
 
-  follow = async (oauth_id: string, token: string): Promise<void> => {
+  follow = async (id: string, token: string): Promise<void> => {
     const user = await this.readCurrentUserPort.verifyUser(token);
 
-    const target = await this.readUserPort.findByOauthIdOrFail(oauth_id);
+    const target = await this.readUserPort.findByIdOrFail(id);
 
     const follow = await this.readFollowPort.readByUserAndTarget(user, target);
 

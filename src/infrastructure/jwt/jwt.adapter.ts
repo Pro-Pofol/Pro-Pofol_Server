@@ -65,7 +65,7 @@ export class JwtAdapter
         })
       ).sub;
 
-      return await this.readUserPort.findByOauthIdOrFail(sub);
+      return await this.readUserPort.findByIdOrFail(sub);
     } catch (e) {
       console.error(e);
       throw new UnauthorizedException('Invalid token', e.message);

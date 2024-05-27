@@ -34,8 +34,8 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'writer_id' })
-  writer_id: number;
+  @Column({ name: 'writer_id', length: 21 })
+  writer_id: string;
 
   @Index()
   @Column({ name: 'post_type', type: 'enum', enum: PostType, nullable: false })
@@ -44,10 +44,7 @@ export class Post {
   @Column({ name: 'title', length: 55, nullable: false })
   title: string;
 
-  @Column({ nullable: true })
-  content?: string;
-
-  @Column({ name: 'link', length: 93, nullable: true })
+  @Column({ name: 'link', length: 120, nullable: true })
   link?: string;
 
   @Column({ type: 'enum', enum: Major })
@@ -67,10 +64,9 @@ export class Post {
 
   constructor(
     id: number | null,
-    writer_id: number,
+    writer_id: string,
     post_type: PostType,
     title: string,
-    content: string | null,
     link: string | null,
     major: Major,
     created_at: Date | null,
@@ -81,7 +77,6 @@ export class Post {
     this.writer_id = writer_id;
     this.post_type = post_type;
     this.title = title;
-    if (content) this.content = content;
     if (link) this.link = link;
     this.major = major;
     if (created_at) this.created_at = created_at;

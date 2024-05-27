@@ -4,8 +4,8 @@ import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('tbl_tip_like')
 export class TipLike {
-  @PrimaryColumn({ name: 'user_id' })
-  user_id: number;
+  @PrimaryColumn({ name: 'user_id', length: 21 })
+  user_id: string;
 
   @PrimaryColumn({ name: 'tip_id' })
   tip_id: number;

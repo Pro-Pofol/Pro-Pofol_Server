@@ -12,11 +12,11 @@ export class Follow {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'follower_id' })
-  follower_id: number;
+  @Column({ name: 'follower_id', length: 21 })
+  follower_id: string;
 
-  @Column({ name: 'target_id' })
-  target_id: number;
+  @Column({ name: 'target_id', length: 21 })
+  target_id: string;
 
   @ManyToOne(() => User, (user) => user.follower, {
     cascade: ['remove'],
