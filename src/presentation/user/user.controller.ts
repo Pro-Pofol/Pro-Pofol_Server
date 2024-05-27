@@ -11,7 +11,7 @@ export class UserController {
 
   @Get('/users/:oauthId')
   async getUserInfo(
-    @Param('oauthId') oauth_id: string,
+    @Param('oauth_id') oauth_id: string,
     @Res() res: Response,
   ): Promise<Response> {
     return res

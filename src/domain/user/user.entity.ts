@@ -21,8 +21,8 @@ export class User {
   @Column({ name: 'uuid', type: 'binary', length: 36 })
   uuid: string;
 
-  @Column({ unique: true })
-  oauthId: string;
+  @Column({ name: 'oauth_id', unique: true })
+  oauth_id: string;
 
   @Column()
   name: string;
@@ -35,8 +35,8 @@ export class User {
   @Column({ nullable: true })
   generation?: number;
 
-  @Column({ nullable: true, length: 305 })
-  profileImage?: string;
+  @Column({ name: 'profile_image', nullable: true, length: 305 })
+  profile_image?: string;
 
   @OneToMany(() => Post, (post) => post.user)
   post?: Post[] | null;
@@ -59,11 +59,11 @@ export class User {
   constructor(
     id: number | null,
     uuid: string | null,
-    oauthId: string,
+    oauth_id: string,
     name: string,
     major: Major,
     generation: number,
-    profileImage: string,
+    profile_image: string,
     post?: Post[] | null,
     postLike?: PostLike[] | null,
     tip?: Tip[] | null,
@@ -74,11 +74,11 @@ export class User {
     if (id) this.id = id;
     if (uuid) this.uuid = uuid;
     else this.uuid = v4();
-    this.oauthId = oauthId;
+    this.oauth_id = oauth_id;
     this.name = name;
     this.major = major;
     this.generation = generation;
-    this.profileImage = profileImage;
+    this.profile_image = profile_image;
     this.post = post;
     this.postLike = postLike;
     this.tip = tip;
