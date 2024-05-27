@@ -32,8 +32,9 @@ async function bootstrap() {
       'User-Agent',
       'Host',
       'Connection',
+      'Authorization',
     ],
-    exposedHeaders: ['Authorization', 'OA-TOKEN'],
+    exposedHeaders: ['Authorization', 'OA-TOKEN', 'Location'],
   });
 
   const port = Number(process.env.PORT);

@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Inject, Param, Res, UnauthorizedException } from '@nestjs/common';
 import { GetUserInfoUseCase } from '../../core/user/port/user.in.port';
 import { Response } from 'express';
 
@@ -8,6 +8,20 @@ export class UserController {
     @Inject('getUser')
     private readonly getUserInfoUseCase: GetUserInfoUseCase,
   ) {}
+
+  @Get('/users/me')
+  async getMyInfo(
+    @Headers('Authorization') token: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token) {
+      throw new UnauthorizedException('No Authenticated');
+    }
+
+    return res
+      .json(await this.getUserInfoUseCase.getMyInfo(token))
+      .sendStatus(200);
+  }
 
   @Get('/users/:oauthId')
   async getUserInfo(
