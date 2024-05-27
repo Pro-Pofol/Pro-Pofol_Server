@@ -33,19 +33,36 @@ export class PostRepository
   ): Promise<object | null | undefined> => {
     return await this.postEntity
       .createQueryBuilder('post')
-      .innerJoin('post.user', 'user', 'user.id = post.writerId')
+      .innerJoin('post.user', 'user', 'user.id = post.writer_id')
       .select([
         'user.oauthId',
         'post.id',
-        'post.postType',
+        'post.post_type',
         'post.title',
         'post.content',
         'post.link',
         'post.major',
-        'post.createdAt',
+        'post.created_at',
       ])
       .where('post.id = :id', { id: postId })
       .getRawOne();
+  };
+
+  readAllByRandom = async (): Promise<object[]> => {
+    return await this.postEntity
+      .createQueryBuilder('post')
+      .innerJoin('post.user', 'user', 'user.id = post.writer_id')
+      .select([
+        'post.id',
+        'post.title',
+        'post.post_type',
+        'user.name',
+        'post.created_at',
+        'post.major',
+      ])
+      .orderBy('RAND()')
+      .limit(18)
+      .getRawMany();
   };
 
   delete = async (postId: number): Promise<void> => {

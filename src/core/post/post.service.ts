@@ -2,6 +2,7 @@ import {
   PostFileUseCase,
   PostLinkUseCase,
   ReadDetailPostUseCase,
+  ReadRecommendedUseCase,
   RemovePostUseCase,
 } from './port/post.in.port';
 import {
@@ -18,6 +19,7 @@ import {
 import {
   BadRequestException,
   ForbiddenException,
+  HttpException,
   Inject,
 } from '@nestjs/common';
 
@@ -140,5 +142,20 @@ export class RemovePostService implements RemovePostUseCase {
     // s3 object 삭제 요청 추가 자리
 
     await this.removePostPort.delete(postId);
+  };
+}
+
+export class ReadRecommendedPostService implements ReadRecommendedUseCase {
+  constructor(
+    @Inject('post out port')
+    private readonly readPostPort: ReadPostPort,
+  ) {}
+
+  readRecommendedPost = async (): Promise<object[]> => {
+    const data = await this.readPostPort.readAllByRandom();
+
+    if (data!.length <= 0) throw new HttpException('There is No Content', 204);
+
+    return data;
   };
 }
