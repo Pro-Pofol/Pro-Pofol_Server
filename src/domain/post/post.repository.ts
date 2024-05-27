@@ -35,7 +35,7 @@ export class PostRepository
       .createQueryBuilder('post')
       .innerJoin('post.user', 'user', 'user.id = post.writer_id')
       .select([
-        'user.oauthId',
+        'user.oauth_id',
         'post.id',
         'post.post_type',
         'post.title',
