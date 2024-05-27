@@ -17,10 +17,10 @@ export class FollowController {
     private readonly followUserUseCase: FollowUserUseCase,
   ) {}
 
-  @Post('/users/follow/:oauth-id')
+  @Post('/users/follow/:oauthId')
   async follow(
-    @Param('oauthId') oauth_id: string,
     @Headers('Authorization') token: string,
+    @Param('oauth_id') oauth_id: string,
     @Res() res: Response,
   ): Promise<Response> {
     if (!token) {
@@ -29,6 +29,6 @@ export class FollowController {
 
     await this.followUserUseCase.follow(oauth_id, token);
 
-    return res.sendStatus(201);
+    return res.sendStatus(200);
   }
 }

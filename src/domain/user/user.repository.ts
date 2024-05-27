@@ -16,14 +16,14 @@ export class UserRepository
     @InjectRepository(User) private readonly userEntity: Repository<User>,
   ) {}
 
-  existsByOauthId = async (oauthId: string): Promise<boolean> => {
-    return await this.userEntity.existsBy({ oauthId });
+  existsByOauthId = async (oauth_id: string): Promise<boolean> => {
+    return await this.userEntity.existsBy({ oauth_id });
   };
 
-  findByOauthIdOrFail = async (oauthId: string): Promise<User> => {
-    const user = await this.userEntity.findOneBy({ oauthId });
+  findByOauthIdOrFail = async (oauth_id: string): Promise<User> => {
+    const user = await this.userEntity.findOneBy({ oauth_id });
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('User not found By Oauth Id');
 
     return user;
   };
