@@ -2,6 +2,7 @@ import {
   PostFileRequest,
   PostLinkRequest,
 } from '../../../presentation/post/dto/post.request';
+import { PostResponse } from '../../../presentation/post/dto/post.response';
 
 export interface PostLinkUseCase {
   postLink(req: PostLinkRequest, token: string): Promise<void>;
@@ -24,4 +25,8 @@ export interface ReadDetailPostUseCase {
 
 export interface RemovePostUseCase {
   removePost(postId: number, token: string): Promise<void>;
+}
+
+export interface ReadRecommendedUseCase {
+  readRecommendedPost(): Promise<object[]>;
 }

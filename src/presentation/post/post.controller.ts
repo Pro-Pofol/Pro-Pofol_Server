@@ -15,6 +15,7 @@ import {
   PostFileUseCase,
   PostLinkUseCase,
   ReadDetailPostUseCase,
+  ReadRecommendedUseCase,
   RemovePostUseCase,
 } from '../../core/post/port/post.in.port';
 import { Response } from 'express';
@@ -32,6 +33,8 @@ export class PostController {
     private readonly readDetailPostUseCase: ReadDetailPostUseCase,
     @Inject('removePost')
     private readonly removePostUseCase: RemovePostUseCase,
+    @Inject('readRecommendedPost')
+    private readonly readRecommendedUseCase: ReadRecommendedUseCase,
   ) {}
 
   @Post('/link')
@@ -80,5 +83,13 @@ export class PostController {
     await this.removePostUseCase.removePost(postId, token);
 
     return res.status(204).send();
+  }
+
+  @Get('/recommend')
+  async readRecommended(@Res() res: Response): Promise<Response> {
+    return res
+      .status(200)
+      .json({ posts: await this.readRecommendedUseCase.readRecommendedPost() })
+      .send();
   }
 }
