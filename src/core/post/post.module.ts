@@ -6,6 +6,7 @@ import {
   PostFileService,
   PostLinkService,
   ReadDetailPostService,
+  ReadRecommendedPostService,
   RemovePostService,
 } from './post.service';
 import { PostRepository } from '../../domain/post/post.repository';
@@ -30,6 +31,7 @@ import { JwtModule } from '@nestjs/jwt';
     { provide: 'user out port', useClass: UserRepository },
     { provide: 'jwt', useClass: JwtAdapter },
     { provide: 'removePost', useClass: RemovePostService },
+    { provide: 'readRecommendedPost', useClass: ReadRecommendedPostService },
   ],
   controllers: [PostController],
 })

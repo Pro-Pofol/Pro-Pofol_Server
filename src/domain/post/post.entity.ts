@@ -34,11 +34,11 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ name: 'writer_id' })
   writerId: number;
 
   @Index()
-  @Column({ type: 'enum', enum: PostType, nullable: false })
+  @Column({ name: 'post_type', type: 'enum', enum: PostType, nullable: false })
   postType: PostType;
 
   @Column({ name: 'title', length: 55, nullable: false })
@@ -53,13 +53,13 @@ export class Post {
   @Column({ type: 'enum', enum: Major })
   major?: Major;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @ManyToOne(() => User, (user) => user.post, {
     cascade: ['remove'],
   })
-  @JoinColumn({ name: 'writerId' })
+  @JoinColumn({ name: 'writer_id' })
   user: User;
 
   @OneToMany(() => PostLike, (postLike) => postLike.post)
