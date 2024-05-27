@@ -5,7 +5,7 @@ import { Response } from 'express';
 @Controller()
 export class UserController {
   constructor(
-    @Inject('user in port')
+    @Inject('getUser')
     private readonly getUserInfoUseCase: GetUserInfoUseCase,
   ) {}
 

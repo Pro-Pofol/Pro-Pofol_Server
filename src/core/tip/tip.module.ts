@@ -21,7 +21,7 @@ import { JwtModule } from '@nestjs/jwt';
     { provide: 'jwt', useClass: JwtAdapter },
     { provide: 'tip out port', useClass: TipRepository },
     { provide: 'user out port', useClass: UserRepository },
-    { provide: 'writeTip', useClass: WriteTipService },
+    { provide: 'tip in port', useClass: WriteTipService },
   ],
 })
 export class TipModule {}

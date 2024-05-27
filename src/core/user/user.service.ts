@@ -2,8 +2,10 @@ import { GetUserInfoUseCase } from './port/user.in.port';
 import { ReadUserPort } from './port/user.out.port';
 import { Inject } from '@nestjs/common';
 import { UserResponse } from '../../presentation/user/dto/user.response';
+import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
+import { Follow } from '../../domain/follow/follow.entity';
 
-export class UserService implements GetUserInfoUseCase {
+export class GetUserInfoService implements GetUserInfoUseCase {
   constructor(
     @Inject('user out port')
     private readonly readUserPort: ReadUserPort,

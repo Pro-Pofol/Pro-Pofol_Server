@@ -14,7 +14,7 @@ import { WriteTipUseCase } from '../../core/tip/port/tip.in.port';
 @Controller()
 export class TipController {
   constructor(
-    @Inject('writeTip')
+    @Inject('tip in port')
     private writeTipUseCase: WriteTipUseCase,
   ) {}
 
