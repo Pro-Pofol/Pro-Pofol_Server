@@ -41,8 +41,8 @@ export class User {
   @OneToMany(() => Post, (post) => post.user)
   post?: Post[] | null;
 
-  @OneToMany(() => PostLike, (postLike) => postLike.user)
-  postLike?: PostLike[] | null;
+  @OneToMany(() => PostLike, (post_like) => post_like.user)
+  post_like?: PostLike[] | null;
 
   @OneToMany(() => Tip, (tip) => tip.user)
   tip?: Tip[] | null;
@@ -65,7 +65,7 @@ export class User {
     generation: number,
     profile_image: string,
     post?: Post[] | null,
-    postLike?: PostLike[] | null,
+    post_like?: PostLike[] | null,
     tip?: Tip[] | null,
     tipLike?: TipLike[] | null,
     follower?: Follow[] | null,
@@ -80,7 +80,7 @@ export class User {
     this.generation = generation;
     this.profile_image = profile_image;
     this.post = post;
-    this.postLike = postLike;
+    this.post_like = post_like;
     this.tip = tip;
     this.tipLike = tipLike;
     this.follower = follower;

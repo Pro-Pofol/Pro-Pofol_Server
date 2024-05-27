@@ -35,11 +35,11 @@ export class Post {
   id: number;
 
   @Column({ name: 'writer_id' })
-  writerId: number;
+  writer_id: number;
 
   @Index()
   @Column({ name: 'post_type', type: 'enum', enum: PostType, nullable: false })
-  postType: PostType;
+  post_type: PostType;
 
   @Column({ name: 'title', length: 55, nullable: false })
   title: string;
@@ -54,7 +54,7 @@ export class Post {
   major?: Major;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @ManyToOne(() => User, (user) => user.post, {
     cascade: ['remove'],
@@ -62,30 +62,30 @@ export class Post {
   @JoinColumn({ name: 'writer_id' })
   user: User;
 
-  @OneToMany(() => PostLike, (postLike) => postLike.post)
-  postLike: PostLike;
+  @OneToMany(() => PostLike, (post_like) => post_like.post)
+  post_like: PostLike;
 
   constructor(
     id: number | null,
-    writerId: number,
-    postType: PostType,
+    writer_id: number,
+    post_type: PostType,
     title: string,
     content: string | null,
     link: string | null,
     major: Major,
-    createdAt: Date | null,
+    created_at: Date | null,
     user: User | null,
-    postLike: PostLike | null,
+    post_like: PostLike | null,
   ) {
     if (id) this.id = id;
-    this.writerId = writerId;
-    this.postType = postType;
+    this.writer_id = writer_id;
+    this.post_type = post_type;
     this.title = title;
     if (content) this.content = content;
     if (link) this.link = link;
     this.major = major;
-    if (createdAt) this.createdAt = createdAt;
+    if (created_at) this.created_at = created_at;
     if (user) this.user = user;
-    if (postLike) this.postLike = postLike;
+    if (post_like) this.post_like = post_like;
   }
 }

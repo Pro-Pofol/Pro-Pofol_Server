@@ -15,8 +15,8 @@ export class Tip {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  writerId: number;
+  @Column({ name: 'writer_id' })
+  writer_id: number;
 
   @Column()
   title: string;
@@ -24,13 +24,13 @@ export class Tip {
   @Column()
   content: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @CreateDateColumn({ name: 'created_at'})
+  created_at: Date;
 
   @ManyToOne(() => User, (user) => user.tip, {
     cascade: ['remove'],
   })
-  @JoinColumn({ name: 'writerId' })
+  @JoinColumn({ name: 'writer_id' })
   user: User;
 
   @OneToMany(() => TipLike, (tipLike) => tipLike.tip)

@@ -4,21 +4,21 @@ import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('tbl_post_like')
 export class PostLike {
-  @PrimaryColumn()
-  userId: number;
+  @PrimaryColumn({ name: 'user_id' })
+  user_id: number;
 
-  @PrimaryColumn()
-  postId: number;
+  @PrimaryColumn({ name: 'post_id' })
+  post_id: number;
 
-  @ManyToOne(() => User, (user) => user.postLike, {
+  @ManyToOne(() => User, (user) => user.post_like, {
     cascade: ['remove'],
   })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Post, (post) => post.postLike, {
+  @ManyToOne(() => Post, (post) => post.post_like, {
     cascade: ['remove'],
   })
-  @JoinColumn({ name: 'postId' })
+  @JoinColumn({ name: 'post_id' })
   post: Post;
 }

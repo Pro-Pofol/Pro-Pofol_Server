@@ -4,21 +4,21 @@ import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('tbl_tip_like')
 export class TipLike {
-  @PrimaryColumn()
-  userId: number;
+  @PrimaryColumn({ name: 'user_id' })
+  user_id: number;
 
-  @PrimaryColumn()
-  tipId: number;
+  @PrimaryColumn({ name: 'tip_id' })
+  tip_id: number;
 
   @ManyToOne(() => User, (user) => user.tipLike, {
     cascade: ['remove'],
   })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @ManyToOne(() => Tip, (tip) => tip.tipLike, {
     cascade: ['remove'],
   })
-  @JoinColumn({ name: 'tipId' })
+  @JoinColumn({ name: 'tip_id' })
   tip: Tip;
 }

@@ -136,7 +136,7 @@ export class RemovePostService implements RemovePostUseCase {
   removePost = async (postId: number, token: string): Promise<void> => {
     const user = await this.readCurrentUserPort.verifyUser(token);
 
-    if ((await this.readPostPort.readByIdOrFail(postId)).writerId !== user.id)
+    if ((await this.readPostPort.readByIdOrFail(postId)).writer_id !== user.id)
       throw new ForbiddenException('작성자가 아님');
 
     // s3 object 삭제 요청 추가 자리
