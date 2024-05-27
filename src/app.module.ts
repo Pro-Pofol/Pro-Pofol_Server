@@ -12,6 +12,7 @@ import { RedisModule } from '@songkeys/nestjs-redis';
 import { HTTPLoggerMiddleware } from './infrastructure/config/HTTP-logger.middleware';
 import { redisConfig, typeORMConfig } from './infrastructure/config/db.config';
 import { JwtCustomModule } from './infrastructure/jwt/jwt.module';
+import { AwsModule } from './infrastructure/aws/aws.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { JwtCustomModule } from './infrastructure/jwt/jwt.module';
       isGlobal: true,
       cache: true,
     }),
+    AwsModule,
     UserModule,
     PostModule,
     TipModule,

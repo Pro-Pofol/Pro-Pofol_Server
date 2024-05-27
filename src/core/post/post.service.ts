@@ -16,12 +16,9 @@ import {
   RemovePostPort,
   SavePostPort,
 } from './port/post.out.port';
-import {
-  BadRequestException,
-  ForbiddenException,
-  HttpException,
-  Inject,
-} from '@nestjs/common';
+import { ForbiddenException, HttpException, Inject } from '@nestjs/common';
+import { AwsService } from '../../infrastructure/aws/aws.service';
+import { v4 } from 'uuid';
 
 export class PostLinkService implements PostLinkUseCase {
   constructor(
@@ -31,7 +28,7 @@ export class PostLinkService implements PostLinkUseCase {
     private readonly savePostPort: SavePostPort,
   ) {}
 
-  postLink = async (req: PostLinkRequest, token: string): Promise<void> => {
+  postLink = async (req: PostLinkRequest, token: string): Promise<number> => {
     const user = await this.readCurrentUserPort.verifyUser(token);
 
     const post = new Post(
@@ -47,7 +44,7 @@ export class PostLinkService implements PostLinkUseCase {
       null,
     );
 
-    await this.savePostPort.save(post);
+    return (await this.savePostPort.save(post)).id;
   };
 }
 
@@ -57,49 +54,34 @@ export class PostFileService implements PostFileUseCase {
     private readonly readCurrentUserPort: ReadCurrentUserPort,
     @Inject('post out port')
     private readonly savePostPort: SavePostPort,
-    //@InjectAwsService(S3) private readonly s3: S3,
+    private readonly awsService: AwsService,
   ) {}
 
   postFile = async (
     dto: PostFileRequest,
     token: string,
     file: Express.Multer.File,
-  ): Promise<string> => {
+  ): Promise<number> => {
     const user = await this.readCurrentUserPort.verifyUser(token);
 
-    // const params: PutObjectRequest = {
-    //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    //   Bucket: process.env.AWS_S3_BUCKET_NAME!,
-    //   Key: String(file.originalname),
-    //   Body: file.buffer,
-    // };
-    //
-    // let response: ManagedUpload.SendData;
-    //
-    // try {
-    //   response = await this.s3.upload(params).promise();
-    // } catch (err) {
-    //   console.error(err);
-    //   throw new BadRequestException('파일 업로드 실패');
-    // }
-    //
-    // const post = new Post(
-    //   null,
-    //   user.id,
-    //   dto.type,
-    //   dto.title,
-    //   response.Location,
-    //   null,
-    //   dto.major,
-    //   null,
-    //   user,
-    //   null,
-    // );
-    //
-    // await this.savePostPort.save(post);
-    //
-    // return response.Location;
-    return '';
+    const response = await this.awsService.fileUploadToS3(
+      user.oauth_id + '/' + v4(),
+      file,
+    );
+
+    const post = new Post(
+      null,
+      user.id,
+      dto.type,
+      dto.title,
+      response,
+      null,
+      dto.major,
+      null,
+      user,
+      null,
+    );
+    return (await this.savePostPort.save(post)).id;
   };
 }
 

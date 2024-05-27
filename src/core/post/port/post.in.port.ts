@@ -2,10 +2,9 @@ import {
   PostFileRequest,
   PostLinkRequest,
 } from '../../../presentation/post/dto/post.request';
-import { PostResponse } from '../../../presentation/post/dto/post.response';
 
 export interface PostLinkUseCase {
-  postLink(req: PostLinkRequest, token: string): Promise<void>;
+  postLink(req: PostLinkRequest, token: string): Promise<number>;
 }
 
 export interface PostFileUseCase {
@@ -13,7 +12,7 @@ export interface PostFileUseCase {
     dto: PostFileRequest,
     token: string,
     file: Express.Multer.File,
-  ): Promise<string>;
+  ): Promise<number>;
 }
 
 export interface ReadDetailPostUseCase {

@@ -15,6 +15,7 @@ import { UserRepository } from 'src/domain/user/user.repository';
 import { User } from 'src/domain/user/user.entity';
 
 import { JwtModule } from '@nestjs/jwt';
+import { AwsService } from '../../infrastructure/aws/aws.service';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { JwtModule } from '@nestjs/jwt';
     { provide: 'jwt', useClass: JwtAdapter },
     { provide: 'removePost', useClass: RemovePostService },
     { provide: 'readRecommendedPost', useClass: ReadRecommendedPostService },
+    AwsService,
   ],
   controllers: [PostController],
 })

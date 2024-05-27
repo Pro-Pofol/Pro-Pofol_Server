@@ -56,7 +56,7 @@ export class PostRepository
         'post.id',
         'post.title',
         'post.post_type',
-        'user.name',
+        'user.oauth_id',
         'post.created_at',
         'post.major',
       ])

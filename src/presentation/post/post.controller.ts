@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,6 +8,7 @@ import {
   Inject,
   Param,
   Post,
+  Req,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -18,7 +20,7 @@ import {
   ReadRecommendedUseCase,
   RemovePostUseCase,
 } from '../../core/post/port/post.in.port';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { PostFileRequest, PostLinkRequest } from './dto/post.request';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -39,27 +41,47 @@ export class PostController {
 
   @Post('/link')
   async postLink(
-    @Body() req: PostLinkRequest,
+    @Req() req: Request,
+    @Body() dto: PostLinkRequest,
     @Res() res: Response,
     @Headers('Authorization') token: string,
   ): Promise<Response> {
-    await this.postLinkUseCase.postLink(req, token);
+    const id = await this.postLinkUseCase.postLink(dto, token);
+    let location: string;
 
-    return res.status(201).send();
+    if (req.hostname != 'localhost') {
+      location = `${req.protocol}://${req.hostname}/post/read/${id}`;
+    } else {
+      location = `${req.protocol}://${req.hostname}:${process.env.PORT}/post/read/${id}`;
+    }
+
+    return res.status(201).location(location).send();
   }
 
   @Post('/file')
   @UseInterceptors(FileInterceptor('file'))
   async postFile(
+    @Req() req: Request,
     @UploadedFile() file: Express.Multer.File,
     @Body() dto: PostFileRequest,
     @Res() res: Response,
     @Headers('Authorization') token: string,
   ): Promise<Response> {
-    return res
-      .status(201)
-      .location(await this.postFileUseCase.postFile(dto, token, file))
-      .send();
+    if (!file || file.size <= 0) {
+      throw new BadRequestException('File is empty');
+    }
+
+    const id = await this.postFileUseCase.postFile(dto, token, file);
+
+    let location: string;
+
+    if (req.hostname != 'localhost') {
+      location = `${req.protocol}://${req.hostname}/post/read/${id}`;
+    } else {
+      location = `${req.protocol}://${req.hostname}:${process.env.PORT}/post/read/${id}`;
+    }
+
+    return res.status(201).location(location).send();
   }
 
   @Get('/read/:postId')
