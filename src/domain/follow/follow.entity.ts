@@ -29,4 +29,9 @@ export class Follow {
   })
   @JoinColumn({ name: 'targetId', referencedColumnName: 'id' })
   target: User;
+
+  constructor(follower: User, target: User) {
+    this.follower = follower;
+    this.target = target;
+  }
 }

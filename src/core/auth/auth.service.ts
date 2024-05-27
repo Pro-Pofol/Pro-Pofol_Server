@@ -83,9 +83,8 @@ export class SignupService implements SignupUseCase {
   };
 
   signupWithFacebook = async (token: string, req: SignupRequest) => {
-    const profile = await this.readFacebookProfilePort.getFacebookProfile(
-      token,
-    );
+    const profile =
+      await this.readFacebookProfilePort.getFacebookProfile(token);
 
     if (await this.existsUserPort.existsByOauthId(profile.id)) {
       throw new ConflictException('Already registered');
@@ -132,9 +131,8 @@ export class LoginService implements LoginUseCase {
   ) {}
 
   loginWithFacebook = async (token: string): Promise<TokenResponse> => {
-    const profile = await this.readFacebookProfilePort.getFacebookProfile(
-      token,
-    );
+    const profile =
+      await this.readFacebookProfilePort.getFacebookProfile(token);
 
     if (!(await this.existsUserPort.existsByOauthId(profile.id))) {
       throw new ConflictException('User does not sign up');
