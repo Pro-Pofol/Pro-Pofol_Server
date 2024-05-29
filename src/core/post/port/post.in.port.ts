@@ -1,4 +1,3 @@
-import { Major, PostType, SortType } from 'src/domain/post/post.entity';
 import {
   PostFileRequest,
   PostLinkRequest,
