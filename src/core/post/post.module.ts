@@ -8,6 +8,7 @@ import {
   ReadDetailPostService,
   ReadRecommendedPostService,
   RemovePostService,
+  SearchPostService,
 } from './post.service';
 import { PostRepository } from '../../domain/post/post.repository';
 import { JwtAdapter } from '../../infrastructure/jwt/jwt.adapter';
@@ -33,6 +34,7 @@ import { AwsService } from '../../infrastructure/aws/aws.service';
     { provide: 'jwt', useClass: JwtAdapter },
     { provide: 'removePost', useClass: RemovePostService },
     { provide: 'readRecommendedPost', useClass: ReadRecommendedPostService },
+    { provide: 'searchPost', useClass: SearchPostService },
     AwsService,
   ],
   controllers: [PostController],

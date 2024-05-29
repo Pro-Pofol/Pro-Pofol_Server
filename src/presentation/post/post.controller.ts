@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Req,
+  Query,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -19,9 +20,14 @@ import {
   ReadDetailPostUseCase,
   ReadRecommendedUseCase,
   RemovePostUseCase,
+  SearchPostUseCase,
 } from '../../core/post/port/post.in.port';
 import { Request, Response } from 'express';
-import { PostFileRequest, PostLinkRequest } from './dto/post.request';
+import {
+  PostFileRequest,
+  PostLinkRequest,
+  PostSearchRequest,
+} from './dto/post.request';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('post')
@@ -37,6 +43,8 @@ export class PostController {
     private readonly removePostUseCase: RemovePostUseCase,
     @Inject('readRecommendedPost')
     private readonly readRecommendedUseCase: ReadRecommendedUseCase,
+    @Inject('searchPost')
+    private readonly searchPostUseCase: SearchPostUseCase,
   ) {}
 
   @Post('/link')
@@ -112,6 +120,18 @@ export class PostController {
     return res
       .status(200)
       .json({ posts: await this.readRecommendedUseCase.readRecommendedPost() })
+      .send();
+  }
+
+  @Get('search?')
+  async searchPost(
+    @Query() dto: PostSearchRequest,
+    @Res() res: Response,
+    @Headers('Authorization') token: string,
+  ) {
+    return res
+      .status(200)
+      .json({ posts: await this.searchPostUseCase.searchPost(dto, token) })
       .send();
   }
 }
