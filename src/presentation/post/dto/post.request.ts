@@ -1,5 +1,5 @@
 import { IsEnum, IsString, Length } from 'class-validator';
-import { Major, PostType } from '../../../domain/post/post.entity';
+import { Major, PostType, SortType } from '../../../domain/post/post.entity';
 
 export class PostLinkRequest {
   @IsString({
@@ -61,4 +61,18 @@ export class PostFileRequest {
       `${validationArguments.property} : enum이여야 합니다.`,
   })
   major: Major;
+}
+
+export class PostSearchRequest {
+  @IsString()
+  keyword: string;
+
+  @IsEnum(PostType)
+  type: PostType;
+
+  @IsEnum(Major)
+  major: Major;
+
+  @IsEnum(SortType)
+  sort: SortType;
 }

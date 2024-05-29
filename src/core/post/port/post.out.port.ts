@@ -1,3 +1,4 @@
+import { PostSearchRequest } from 'src/presentation/post/dto/post.request';
 import { Post } from '../../../domain/post/post.entity';
 
 export interface SavePostPort {
@@ -10,6 +11,8 @@ export interface ReadPostPort {
   readDetailPost(postId: number): Promise<object | null | undefined>;
 
   readAllByRandom(): Promise<object[]>;
+
+  searchPost(dto: PostSearchRequest): Promise<object[]>;
 }
 
 export interface RemovePostPort {

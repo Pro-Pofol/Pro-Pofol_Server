@@ -1,6 +1,8 @@
+import { Major, PostType, SortType } from 'src/domain/post/post.entity';
 import {
   PostFileRequest,
   PostLinkRequest,
+  PostSearchRequest,
 } from '../../../presentation/post/dto/post.request';
 
 export interface PostLinkUseCase {
@@ -28,4 +30,8 @@ export interface RemovePostUseCase {
 
 export interface ReadRecommendedUseCase {
   readRecommendedPost(): Promise<object[]>;
+}
+
+export interface SearchPostUseCase {
+  searchPost(dto: PostSearchRequest, token: string): Promise<object[]>;
 }

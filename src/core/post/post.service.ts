@@ -4,10 +4,12 @@ import {
   ReadDetailPostUseCase,
   ReadRecommendedUseCase,
   RemovePostUseCase,
+  SearchPostUseCase,
 } from './port/post.in.port';
 import {
   PostFileRequest,
   PostLinkRequest,
+  PostSearchRequest,
 } from '../../presentation/post/dto/post.request';
 import { Post } from '../../domain/post/post.entity';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
@@ -134,7 +136,28 @@ export class ReadRecommendedPostService implements ReadRecommendedUseCase {
   readRecommendedPost = async (): Promise<object[]> => {
     const data = await this.readPostPort.readAllByRandom();
 
-    if (data!.length <= 0) throw new HttpException('There is No Content', 204);
+    if (data.length === 0) throw new HttpException('There is No Content', 204);
+
+    return data;
+  };
+}
+
+export class SearchPostService implements SearchPostUseCase {
+  constructor(
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+    @Inject('post out port')
+    private readonly readPostPort: ReadPostPort,
+  ) {}
+
+  searchPost = async (
+    dto: PostSearchRequest,
+    token: string,
+  ): Promise<object[]> => {
+    await this.readCurrentUserPort.verifyUser(token);
+
+    const data = await this.readPostPort.searchPost(dto);
+    if (data.length === 0) throw new HttpException('There is No Content', 204);
 
     return data;
   };
