@@ -21,12 +21,20 @@ export enum Major {
   DESIGN = 'Design',
   BLOCKCHAIN = 'Blockchain',
   CROSS_PLATFORM = 'CrossPlatform',
+  EMBEDED = 'Embeded',
+  DEVOPS = 'DevOps',
 }
 
 export enum PostType {
+  EVERYTHING = 'Everything',
   PORTFOLIO = 'Portfolio',
   PERSONAL_STATEMENT = 'PersonalStatement',
   RESUME = 'Resume',
+}
+
+export enum SortType {
+  ASC = 'ASC',
+  DESC = 'DESC',
 }
 
 @Entity('tbl_post')
