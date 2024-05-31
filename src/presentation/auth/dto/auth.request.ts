@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Major } from '../../../domain/post/post.entity';
+import { UserMajor } from 'src/domain/user/user.entity';
 
 export class SignupRequest {
   @IsString({
@@ -13,11 +13,11 @@ export class SignupRequest {
     message: (validationArguments) =>
       `${validationArguments.property} : null일 수 없습니다.`,
   })
-  @IsEnum(Major, {
+  @IsEnum(UserMajor, {
     message: (validationArguments) =>
       `${validationArguments.property} : enum값이 아닙니다.`,
   })
-  major: Major;
+  user_major: UserMajor;
 
   @IsNotEmpty({
     message: (validationArguments) =>

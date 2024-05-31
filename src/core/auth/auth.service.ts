@@ -37,7 +37,7 @@ export class SignupService implements SignupUseCase {
     const user = new User(
       profile.sub,
       req.name ?? profile.name,
-      req.major,
+      req.user_major,
       req.generation,
       req.profile_image_url ?? profile.picture,
       null,
@@ -62,7 +62,7 @@ export class SignupService implements SignupUseCase {
     const user = new User(
       profile.id,
       req.name ?? profile.properties.nickname,
-      req.major,
+      req.user_major,
       req.generation,
       req.profile_image_url ?? profile.properties.profile_image,
       null,
@@ -87,7 +87,7 @@ export class SignupService implements SignupUseCase {
     const user = new User(
       profile.id,
       req.name ?? profile.name,
-      req.major,
+      req.user_major,
       req.generation,
       req.profile_image_url ??
         (await this.readFacebookProfilePort.getFacebookProfileImage(token)).data
