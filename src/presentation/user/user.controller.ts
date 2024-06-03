@@ -1,23 +1,31 @@
 import {
+  Body,
   Controller,
   Get,
   Headers,
   Inject,
   Param,
+  Patch,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import { GetUserInfoUseCase } from '../../core/user/port/user.in.port';
 import { Response } from 'express';
+import {
+  GetUserInfoUseCase,
+  UpdateMyInfoUseCase,
+} from 'src/core/user/port/user.in.port';
+import { UpdateMyInfoRequest } from './dto/user.request';
 
-@Controller()
+@Controller('users')
 export class UserController {
   constructor(
     @Inject('getUser')
     private readonly getUserInfoUseCase: GetUserInfoUseCase,
+    @Inject('updateMyInfo')
+    private readonly updateMyInfoUseCase: UpdateMyInfoUseCase,
   ) {}
 
-  @Get('/users/me')
+  @Get('/me')
   async getMyInfo(
     @Headers('Authorization') token: string,
     @Res() res: Response,
@@ -31,7 +39,7 @@ export class UserController {
       .sendStatus(200);
   }
 
-  @Get('/users/:id')
+  @Get('/:id')
   async getUserInfo(
     @Param('id') id: string,
     @Res() res: Response,
@@ -39,5 +47,17 @@ export class UserController {
     return res
       .json(await this.getUserInfoUseCase.getUserInfo(id))
       .sendStatus(200);
+  }
+
+  @Patch('/me')
+  async updateMyInfo(
+    @Headers('Authorization') token: string,
+    @Res() res: Response,
+    @Body() dto: UpdateMyInfoRequest,
+  ) {
+    return res
+      .status(200)
+      .json(await this.updateMyInfoUseCase.updateMyInfo(token, dto))
+      .send();
   }
 }

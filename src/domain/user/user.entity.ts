@@ -1,10 +1,24 @@
 import { Follow } from 'src/domain/follow/follow.entity';
 import { PostLike } from 'src/domain/post-like/post-like.entity';
-import { Major, Post } from 'src/domain/post/post.entity';
+import { Post } from 'src/domain/post/post.entity';
 import { TipLike } from 'src/domain/tip-like/tip-like.entity';
 import { Tip } from 'src/domain/tip/tip.entity';
 import { Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
 import { Length } from 'class-validator';
+
+export enum UserMajor {
+  BACKEND = 'Backend',
+  FRONTEND = 'Frontend',
+  ANDROID = 'Android',
+  IOS = 'iOS',
+  GAME = 'Game',
+  AI = 'AI',
+  DESIGN = 'Design',
+  BLOCKCHAIN = 'Blockchain',
+  CROSS_PLATFORM = 'CrossPlatform',
+  EMBEDED = 'Embeded',
+  DEVOPS = 'DevOps',
+}
 
 @Entity('tbl_user')
 export class User {
@@ -15,8 +29,8 @@ export class User {
   name: string;
 
   @Length(0, 8)
-  @Column({ nullable: true, type: 'enum', enum: Major })
-  major?: Major;
+  @Column({ nullable: true, type: 'enum', enum: UserMajor })
+  user_major?: UserMajor;
 
   @Index()
   @Column({ nullable: true })
@@ -46,7 +60,7 @@ export class User {
   constructor(
     id: string,
     name: string,
-    major: Major,
+    user_major: UserMajor,
     generation: number,
     profile_image: string,
     post?: Post[] | null,
@@ -58,7 +72,7 @@ export class User {
   ) {
     this.id = id;
     this.name = name;
-    this.major = major;
+    this.user_major = user_major;
     this.generation = generation;
     this.profile_image = profile_image;
     this.post = post;

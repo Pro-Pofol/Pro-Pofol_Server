@@ -1,11 +1,11 @@
-import { Major } from '../../../domain/post/post.entity';
+import { UserMajor } from 'src/domain/user/user.entity';
 
 export class UserResponse {
   oauth_id: string;
 
   name: string;
 
-  major: Major;
+  user_major: UserMajor;
 
   generation: number;
 
@@ -16,11 +16,11 @@ export class UserResponse {
     name: string,
     generation?: number,
     profileImage?: string,
-    major?: Major,
+    user_major?: UserMajor,
   ) {
     this.oauth_id = oauth_id;
     this.name = name;
-    if (major) this.major = major;
+    if (user_major) this.user_major = user_major;
     if (generation) this.generation = generation;
     if (profileImage) this.profile_image = profileImage;
   }

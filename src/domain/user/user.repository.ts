@@ -6,11 +6,13 @@ import {
   ExistsUserPort,
   ReadUserPort,
   SaveUserPort,
+  UpdateUserPort,
 } from '../../core/user/port/user.out.port';
+import { UpdateMyInfoRequest } from 'src/presentation/user/dto/user.request';
 
 @Injectable()
 export class UserRepository
-  implements ReadUserPort, SaveUserPort, ExistsUserPort
+  implements ReadUserPort, SaveUserPort, ExistsUserPort, UpdateUserPort
 {
   constructor(
     @InjectRepository(User) private readonly userEntity: Repository<User>,
@@ -31,4 +33,8 @@ export class UserRepository
   save = async (entity: User): Promise<User> => {
     return await this.userEntity.save(entity);
   };
+
+  update = async (id: string, dto: UpdateMyInfoRequest): Promise<void> => {
+    await this.userEntity.update(id, dto);
+  }
 }
