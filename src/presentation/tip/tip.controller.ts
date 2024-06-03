@@ -3,22 +3,29 @@ import {
   Controller,
   Headers,
   Inject,
+  Param,
+  Patch,
   Post,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import { WriteTipRequest } from './dto/tip.request';
+import { ModifyTipRequest, WriteTipRequest } from './dto/tip.request';
 import { Response } from 'express';
-import { WriteTipUseCase } from '../../core/tip/port/tip.in.port';
+import {
+  ModifyTipUseCase,
+  WriteTipUseCase,
+} from '../../core/tip/port/tip.in.port';
 
-@Controller()
+@Controller('tip')
 export class TipController {
   constructor(
-    @Inject('tip in port')
-    private writeTipUseCase: WriteTipUseCase,
+    @Inject('writeTip')
+    private readonly writeTipUseCase: WriteTipUseCase,
+    @Inject('modifyTip')
+    private readonly modifyTipUseCase: ModifyTipUseCase,
   ) {}
 
-  @Post('/tip')
+  @Post()
   async writeTip(
     @Body() dto: WriteTipRequest,
     @Headers('Authorization') token: string,
@@ -31,5 +38,21 @@ export class TipController {
     await this.writeTipUseCase.write(dto, token);
 
     return res.sendStatus(201);
+  }
+
+  @Patch('/:tipId')
+  async modifyTip(
+    @Headers('Authorization') token: string,
+    @Param('tipId') tipId: number,
+    @Body() dto: ModifyTipRequest,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token) {
+      throw new UnauthorizedException('Permission denied');
+    }
+
+    await this.modifyTipUseCase.modify(dto, tipId, token);
+
+    return res.sendStatus(200);
   }
 }

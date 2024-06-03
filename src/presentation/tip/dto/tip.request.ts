@@ -1,4 +1,4 @@
-import { IsString, Length } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 
 export class WriteTipRequest {
   @IsString({
@@ -16,4 +16,14 @@ export class WriteTipRequest {
       `${validationArguments.property} : string이여야 합니다.`,
   })
   content: string;
+}
+
+export class ModifyTipRequest {
+  @IsString()
+  @IsOptional()
+  title?: string;
+
+  @IsString()
+  @IsOptional()
+  content?: string;
 }
