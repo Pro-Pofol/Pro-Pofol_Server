@@ -1,16 +1,14 @@
-import { UserInfoUseCase } from './port/user.in.port';
+import { GetUserInfoUseCase, UpdateMyInfoUseCase } from './port/user.in.port';
 import { ReadUserPort, UpdateUserPort } from './port/user.out.port';
 import { Inject } from '@nestjs/common';
 import { UserResponse } from '../../presentation/user/dto/user.response';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
 import { UpdateMyInfoRequest } from 'src/presentation/user/dto/user.request';
 
-export class UserInfoService implements UserInfoUseCase {
+export class GetUserInfoService implements GetUserInfoUseCase {
   constructor(
     @Inject('user out port')
     private readonly readUserPort: ReadUserPort,
-    @Inject('user out port')
-    private readonly updateUserPort: UpdateUserPort,
     @Inject('jwt')
     private readonly readCurrentUserPort: ReadCurrentUserPort,
   ) {}
@@ -38,6 +36,15 @@ export class UserInfoService implements UserInfoUseCase {
       user.user_major,
     );
   };
+}
+
+export class UpdateMyInfoService implements UpdateMyInfoUseCase {
+  constructor(
+    @Inject('user out port')
+    private readonly updateUserPort: UpdateUserPort,
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+  ) {}
 
   updateMyInfo = async (
     token: string,
@@ -45,6 +52,6 @@ export class UserInfoService implements UserInfoUseCase {
   ): Promise<void> => {
     const user = await this.readCurrentUserPort.verifyUser(token);
 
-    return await this.updateUserPort.update(user.id, dto)
+    return await this.updateUserPort.update(user.id, dto);
   };
 }
