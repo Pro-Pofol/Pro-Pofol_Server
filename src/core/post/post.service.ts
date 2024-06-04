@@ -93,10 +93,7 @@ export class ReadDetailPostService implements ReadDetailPostUseCase {
     private readonly readPostPort: ReadPostPort,
   ) {}
 
-  readDetailPost = async (
-    postId: number,
-    token: string,
-  ): Promise<object> => {
+  readDetailPost = async (postId: number, token: string): Promise<object> => {
     await this.readCurrentUserPort.verifyUser(token);
 
     return await this.readPostPort.readByIdOrFail(postId);
