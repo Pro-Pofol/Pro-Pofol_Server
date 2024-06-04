@@ -1,0 +1,7 @@
+config:
+  name: propofol
+  service_type: be
+  port: 8080
+  domain:
+    stag: p-stag.xquare.app
+    prod: propofol.xquare.app

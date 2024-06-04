@@ -1,0 +1,46 @@
+name: xquare-deployment
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    permissions:
+      id-token: write
+      contents: read
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+
+      - name: Deploy to xquare
+        uses: team-xquare/xquare-deployment-action@master
+        with:
+          environment: prod
+          access_key: ${{ secrets.XQUARE_ACCESS_KEY }}
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          buildargs: |
+            PROFILE=prod
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}
+            REDIS_PORT=${{ secrets.REDIS_PORT }}
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            PORT=${{ secrets.PORT }}
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            AC_TOKEN_EXP=${{ secrets.AC_TOKEN_EXP }}
+            RF_TOKEN_EXP=${{ secrets.RF_TOKEN_EXP }}
+            REDIS_PORT=${{ secrets.REDIS_PORT }}
+            OAUTH_GOOGLE_ID=${{ secrets.OAUTH_GOOGLE_ID }}
+            KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
+            KAKAO_SECRET_KEY=${{ secrets.KAKAO_SECRET_KEY }}
+            KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
+            AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+            AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}
+            AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}
