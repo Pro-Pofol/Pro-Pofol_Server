@@ -29,24 +29,6 @@ export class PostRepository
     return post;
   };
 
-  readDetailPost = async (
-    postId: number,
-  ): Promise<object | null | undefined> => {
-    return await this.postEntity
-      .createQueryBuilder('post')
-      .select([
-        'post.writer_id',
-        'post.id',
-        'post.post_type',
-        'post.title',
-        'post.link',
-        'post.major',
-        'post.created_at',
-      ])
-      .where('post.id = :id', { id: postId })
-      .getRawOne();
-  };
-
   readAllByRandom = async (): Promise<object[]> => {
     return await this.postEntity
       .createQueryBuilder('post')

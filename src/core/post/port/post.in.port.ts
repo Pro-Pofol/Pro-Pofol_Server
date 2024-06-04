@@ -17,10 +17,7 @@ export interface PostFileUseCase {
 }
 
 export interface ReadDetailPostUseCase {
-  readDetailPost(
-    postId: number,
-    token: string,
-  ): Promise<object | null | undefined>;
+  readDetailPost(postId: number, token: string): Promise<object>;
 }
 
 export interface RemovePostUseCase {

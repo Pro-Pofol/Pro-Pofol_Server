@@ -1,10 +1,14 @@
-import { ModifyTipUseCase, WriteTipUseCase } from './port/tip.in.port';
+import {
+  ModifyTipUseCase,
+  ReadDetailTipUseCase,
+  WriteTipUseCase,
+} from './port/tip.in.port';
 import {
   ModifyTipRequest,
   WriteTipRequest,
 } from '../../presentation/tip/dto/tip.request';
 import { Tip } from '../../domain/tip/tip.entity';
-import { ForbiddenException, Inject } from '@nestjs/common';
+import { ForbiddenException, Inject, NotFoundException } from '@nestjs/common';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
 import { ReadTipPort, SaveTipPort, UpdateTipPort } from './port/tip.out.port';
 
@@ -47,5 +51,20 @@ export class ModifyTipService implements ModifyTipUseCase {
       throw new ForbiddenException('You are Not Tip Writer');
 
     return await this.updateTipPort.update(tipId, dto);
+  };
+}
+
+export class ReadDetailTipService implements ReadDetailTipUseCase {
+  constructor(
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+    @Inject('tip out port')
+    private readonly readTipPort: ReadTipPort,
+  ) {}
+
+  readDetail = async (tipId: number, token: string): Promise<object> => {
+    await this.readCurrentUserPort.verifyUser(token);
+
+    return await this.readTipPort.findByIdOrFail(tipId);
   };
 }
