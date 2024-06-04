@@ -64,15 +64,27 @@ export class PostFileRequest {
 }
 
 export class PostSearchRequest {
-  @IsString()
+  @IsString({
+    message: (validationArguments) =>
+      `${validationArguments.property} : string이여야 합니다.`,
+  })
   keyword: string;
 
-  @IsEnum(PostType)
+  @IsEnum(PostType, {
+    message: (validationArguments) =>
+      `${validationArguments.property} : enum이여야 합니다.`,
+  })
   type: PostType;
 
-  @IsEnum(Major)
+  @IsEnum(Major, {
+    message: (validationArguments) =>
+      `${validationArguments.property} : enum이여야 합니다.`,
+  })
   major: Major;
 
-  @IsEnum(SortType)
+  @IsEnum(SortType, {
+    message: (validationArguments) =>
+      `${validationArguments.property} : enum이여야 합니다.`,
+  })
   sort: SortType;
 }
