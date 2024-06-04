@@ -7,7 +7,10 @@ import {
   SaveTipPort,
   UpdateTipPort,
 } from '../../core/tip/port/tip.out.port';
-import { ModifyTipRequest } from 'src/presentation/tip/dto/tip.request';
+import {
+  ModifyTipRequest,
+  SearchTipRequest,
+} from 'src/presentation/tip/dto/tip.request';
 
 @Injectable()
 export class TipRepository implements SaveTipPort, UpdateTipPort, ReadTipPort {
@@ -29,5 +32,24 @@ export class TipRepository implements SaveTipPort, UpdateTipPort, ReadTipPort {
     if (!tip) throw new NotFoundException('Tip Not Found');
 
     return tip;
+  };
+
+  searchTip = async (dto: SearchTipRequest): Promise<object[]> => {
+    const { keyword, sort } = dto;
+
+    return await this.tipEntity
+      .createQueryBuilder('tip')
+      .innerJoin('tip.user', 'user', 'user.id = tip.writer_id')
+      .select([
+        'tip.id AS id',
+        'tip.title AS title',
+        'tip.content AS content',
+        'tip.created_at AS created_at',
+        'user.name AS writer_name',
+      ])
+      .where('tip.title LIKE :title', { title: `%${keyword}%` })
+      .orderBy('tip.created_at', `${sort}`)
+      .groupBy('tip.id')
+      .getRawMany();
   };
 }

@@ -7,14 +7,20 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ModifyTipRequest, WriteTipRequest } from './dto/tip.request';
+import {
+  ModifyTipRequest,
+  SearchTipRequest,
+  WriteTipRequest,
+} from './dto/tip.request';
 import { Response } from 'express';
 import {
   ModifyTipUseCase,
   ReadDetailTipUseCase,
+  SearchTipUseCase,
   WriteTipUseCase,
 } from '../../core/tip/port/tip.in.port';
 
@@ -27,6 +33,8 @@ export class TipController {
     private readonly modifyTipUseCase: ModifyTipUseCase,
     @Inject('readDetailTip')
     private readonly readDetailTipUseCase: ReadDetailTipUseCase,
+    @Inject('searchTip')
+    private readonly searchTipUseCase: SearchTipUseCase,
   ) {}
 
   @Post()
@@ -73,5 +81,21 @@ export class TipController {
     return res
       .json(await this.readDetailTipUseCase.readDetail(tipId, token))
       .sendStatus(200);
+  }
+
+  @Get('search?')
+  async searchTip(
+    @Headers('Authorization') token: string,
+    @Query() dto: SearchTipRequest,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token) {
+      throw new UnauthorizedException('Permission denied');
+    }
+
+    return res
+      .status(200)
+      .json({ tips: await this.searchTipUseCase.searchTip(dto, token) })
+      .send();
   }
 }
