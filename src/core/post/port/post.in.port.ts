@@ -20,7 +20,7 @@ export interface ReadDetailPostUseCase {
   readDetailPost(
     postId: number,
     token: string,
-  ): Promise<object | null | undefined>;
+  ): Promise<object>;
 }
 
 export interface RemovePostUseCase {

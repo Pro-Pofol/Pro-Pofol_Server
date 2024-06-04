@@ -8,8 +8,6 @@ export interface SavePostPort {
 export interface ReadPostPort {
   readByIdOrFail(id: number): Promise<Post>;
 
-  readDetailPost(postId: number): Promise<object | null | undefined>;
-
   readAllByRandom(): Promise<object[]>;
 
   searchPost(dto: PostSearchRequest): Promise<object[]>;
