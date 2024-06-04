@@ -1,14 +1,16 @@
 import {
   ModifyTipUseCase,
   ReadDetailTipUseCase,
+  SearchTipUseCase,
   WriteTipUseCase,
 } from './port/tip.in.port';
 import {
   ModifyTipRequest,
+  SearchTipRequest,
   WriteTipRequest,
 } from '../../presentation/tip/dto/tip.request';
 import { Tip } from '../../domain/tip/tip.entity';
-import { ForbiddenException, Inject, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, HttpException, Inject, NotFoundException } from '@nestjs/common';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
 import { ReadTipPort, SaveTipPort, UpdateTipPort } from './port/tip.out.port';
 
@@ -66,5 +68,26 @@ export class ReadDetailTipService implements ReadDetailTipUseCase {
     await this.readCurrentUserPort.verifyUser(token);
 
     return await this.readTipPort.findByIdOrFail(tipId);
+  };
+}
+
+export class SearchTipService implements SearchTipUseCase {
+  constructor(
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+    @Inject('tip out port')
+    private readonly readTipPort: ReadTipPort,
+  ) {}
+
+  searchTip = async (
+    dto: SearchTipRequest,
+    token: string,
+  ): Promise<object[]> => {
+    await this.readCurrentUserPort.verifyUser(token);
+
+    const data = await this.readTipPort.searchTip(dto);
+    if (data.length === 0) throw new HttpException('There is No Content', 204);
+
+    return data;
   };
 }

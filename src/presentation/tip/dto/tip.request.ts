@@ -1,4 +1,5 @@
-import { IsOptional, IsString, Length } from 'class-validator';
+import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import { SortType } from 'src/domain/post/post.entity';
 
 export class WriteTipRequest {
   @IsString({
@@ -26,4 +27,18 @@ export class ModifyTipRequest {
   @IsString()
   @IsOptional()
   content?: string;
+}
+
+export class SearchTipRequest {
+  @IsString({
+    message: (validationArguments) =>
+      `${validationArguments.property} : string이여야 합니다.`,
+  })
+  keyword: string;
+
+  @IsEnum(SortType, {
+    message: (validationArguments) =>
+      `${validationArguments.property} : enum이여야 합니다.`,
+  })
+  sort: SortType;
 }

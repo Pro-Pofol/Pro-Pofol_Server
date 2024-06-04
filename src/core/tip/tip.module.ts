@@ -9,6 +9,7 @@ import { UserRepository } from '../../domain/user/user.repository';
 import {
   ModifyTipService,
   ReadDetailTipService,
+  SearchTipService,
   WriteTipService,
 } from './tip.service';
 import { JwtModule } from '@nestjs/jwt';
@@ -28,6 +29,7 @@ import { JwtModule } from '@nestjs/jwt';
     { provide: 'writeTip', useClass: WriteTipService },
     { provide: 'modifyTip', useClass: ModifyTipService },
     { provide: 'readDetailTip', useClass: ReadDetailTipService },
+    { provide: 'searchTip', useClass: SearchTipService },
   ],
 })
 export class TipModule {}

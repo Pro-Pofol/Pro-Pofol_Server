@@ -1,5 +1,6 @@
 import {
   ModifyTipRequest,
+  SearchTipRequest,
   WriteTipRequest,
 } from '../../../presentation/tip/dto/tip.request';
 
@@ -13,4 +14,8 @@ export interface ModifyTipUseCase {
 
 export interface ReadDetailTipUseCase {
   readDetail(tipId: number, token: string): Promise<object>;
+}
+
+export interface SearchTipUseCase {
+  searchTip(dto: SearchTipRequest,token: string): Promise<object[]>
 }
