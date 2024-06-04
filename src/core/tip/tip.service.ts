@@ -1,9 +1,12 @@
-import { WriteTipUseCase } from './port/tip.in.port';
-import { WriteTipRequest } from '../../presentation/tip/dto/tip.request';
+import { ModifyTipUseCase, WriteTipUseCase } from './port/tip.in.port';
+import {
+  ModifyTipRequest,
+  WriteTipRequest,
+} from '../../presentation/tip/dto/tip.request';
 import { Tip } from '../../domain/tip/tip.entity';
-import { Inject } from '@nestjs/common';
+import { ForbiddenException, Inject } from '@nestjs/common';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
-import { SaveTipPort } from './port/tip.out.port';
+import { ReadTipPort, SaveTipPort, UpdateTipPort } from './port/tip.out.port';
 
 export class WriteTipService implements WriteTipUseCase {
   constructor(
@@ -19,5 +22,30 @@ export class WriteTipService implements WriteTipUseCase {
     const tip = new Tip(dto.title, dto.content, user);
 
     await this.saveTipPort.save(tip);
+  };
+}
+
+export class ModifyTipService implements ModifyTipUseCase {
+  constructor(
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+    @Inject('tip out port')
+    private readonly readTipPort: ReadTipPort,
+    @Inject('tip out port')
+    private readonly updateTipPort: UpdateTipPort,
+  ) {}
+
+  modify = async (
+    dto: ModifyTipRequest,
+    tipId: number,
+    token: string,
+  ): Promise<void> => {
+    const user = await this.readCurrentUserPort.verifyUser(token);
+
+    const tip = await this.readTipPort.findByIdOrFail(tipId);
+    if (user.id !== tip.writer_id)
+      throw new ForbiddenException('You are Not Tip Writer');
+
+    return await this.updateTipPort.update(tipId, dto);
   };
 }
