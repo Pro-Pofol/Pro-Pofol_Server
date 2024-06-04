@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Headers,
   Inject,
   Param,
@@ -13,6 +14,7 @@ import { ModifyTipRequest, WriteTipRequest } from './dto/tip.request';
 import { Response } from 'express';
 import {
   ModifyTipUseCase,
+  ReadDetailTipUseCase,
   WriteTipUseCase,
 } from '../../core/tip/port/tip.in.port';
 
@@ -23,6 +25,8 @@ export class TipController {
     private readonly writeTipUseCase: WriteTipUseCase,
     @Inject('modifyTip')
     private readonly modifyTipUseCase: ModifyTipUseCase,
+    @Inject('readDetailTip')
+    private readonly readDetailTipUseCase: ReadDetailTipUseCase,
   ) {}
 
   @Post()
@@ -54,5 +58,20 @@ export class TipController {
     await this.modifyTipUseCase.modify(dto, tipId, token);
 
     return res.sendStatus(200);
+  }
+
+  @Get('/:tipId')
+  async readDetailTip(
+    @Headers('Authorization') token: string,
+    @Param('tipId') tipId: number,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token) {
+      throw new UnauthorizedException('Permission denied');
+    }
+
+    return res
+      .json(await this.readDetailTipUseCase.readDetail(tipId, token))
+      .sendStatus(200);
   }
 }

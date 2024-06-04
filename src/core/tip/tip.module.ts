@@ -6,7 +6,11 @@ import { JwtAdapter } from '../../infrastructure/jwt/jwt.adapter';
 import { TipRepository } from '../../domain/tip/tip.repository';
 import { User } from '../../domain/user/user.entity';
 import { UserRepository } from '../../domain/user/user.repository';
-import { ModifyTipService, WriteTipService } from './tip.service';
+import {
+  ModifyTipService,
+  ReadDetailTipService,
+  WriteTipService,
+} from './tip.service';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -23,6 +27,7 @@ import { JwtModule } from '@nestjs/jwt';
     { provide: 'user out port', useClass: UserRepository },
     { provide: 'writeTip', useClass: WriteTipService },
     { provide: 'modifyTip', useClass: ModifyTipService },
+    { provide: 'readDetailTip', useClass: ReadDetailTipService },
   ],
 })
 export class TipModule {}

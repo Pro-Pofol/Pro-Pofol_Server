@@ -10,3 +10,7 @@ export interface WriteTipUseCase {
 export interface ModifyTipUseCase {
   modify(dto: ModifyTipRequest, tipId: number, token: string): Promise<void>;
 }
+
+export interface ReadDetailTipUseCase {
+  readDetail(tipId: number, token: string): Promise<object>;
+}
