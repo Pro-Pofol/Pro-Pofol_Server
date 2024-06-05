@@ -20,6 +20,7 @@ import { Response } from 'express';
 import {
   ModifyTipUseCase,
   ReadDetailTipUseCase,
+  ReadRecommendedTipUseCase,
   SearchTipUseCase,
   WriteTipUseCase,
 } from '../../core/tip/port/tip.in.port';
@@ -35,6 +36,8 @@ export class TipController {
     private readonly readDetailTipUseCase: ReadDetailTipUseCase,
     @Inject('searchTip')
     private readonly searchTipUseCase: SearchTipUseCase,
+    @Inject('readRecommendedTip')
+    private readonly readRecommendedTipUseCase: ReadRecommendedTipUseCase,
   ) {}
 
   @Post()
@@ -96,6 +99,14 @@ export class TipController {
     return res
       .status(200)
       .json({ tips: await this.searchTipUseCase.searchTip(dto, token) })
+      .send();
+  }
+
+  @Get('/recommend')
+  async readRecommended(@Res() res: Response): Promise<Response> {
+    return res
+      .status(200)
+      .json({ posts: await this.readRecommendedTipUseCase.readRecommendedTip() })
       .send();
   }
 }
