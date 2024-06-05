@@ -19,3 +19,7 @@ export interface ReadDetailTipUseCase {
 export interface SearchTipUseCase {
   searchTip(dto: SearchTipRequest,token: string): Promise<object[]>
 }
+
+export interface ReadRecommendedTipUseCase {
+  readRecommendedTip(): Promise<object[]>;
+}
