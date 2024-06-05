@@ -1,6 +1,7 @@
 import {
   ModifyTipUseCase,
   ReadDetailTipUseCase,
+  ReadRecommendedTipUseCase,
   SearchTipUseCase,
   WriteTipUseCase,
 } from './port/tip.in.port';
@@ -87,6 +88,22 @@ export class SearchTipService implements SearchTipUseCase {
 
     const data = await this.readTipPort.searchTip(dto);
     if (data.length === 0) throw new HttpException('There is No Content', 204);
+
+    return data;
+  };
+}
+
+export class ReadRecommendedTipService implements ReadRecommendedTipUseCase {
+  constructor(
+    @Inject('tip out port')
+    private readonly readTipPort: ReadTipPort,
+  ) {}
+
+  readRecommendedTip = async (): Promise<object[]> => {
+    const data = await this.readTipPort.readAllTipByRandom();
+
+    if (!data || data.length === 0)
+      throw new HttpException('There is No Content', 204);
 
     return data;
   };

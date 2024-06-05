@@ -1,4 +1,7 @@
-import { ModifyTipRequest, SearchTipRequest } from 'src/presentation/tip/dto/tip.request';
+import {
+  ModifyTipRequest,
+  SearchTipRequest,
+} from 'src/presentation/tip/dto/tip.request';
 import { Tip } from '../../../domain/tip/tip.entity';
 
 export interface SaveTipPort {
@@ -13,4 +16,6 @@ export interface ReadTipPort {
   findByIdOrFail(tipId: number): Promise<Tip>;
 
   searchTip(dto: SearchTipRequest): Promise<object[]>;
+
+  readAllTipByRandom(): Promise<object[] | null>;
 }
