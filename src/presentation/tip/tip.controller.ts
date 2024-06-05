@@ -96,7 +96,7 @@ export class TipController {
       .sendStatus(200);
   }
 
-  @Get('/search?')
+  @Get('/search')
   async searchTip(
     @Headers('Authorization') token: string,
     @Query() dto: SearchTipRequest,
