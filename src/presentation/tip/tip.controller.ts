@@ -40,6 +40,16 @@ export class TipController {
     private readonly readRecommendedTipUseCase: ReadRecommendedTipUseCase,
   ) {}
 
+  @Get('/recommend')
+  async readRecommended(@Res() res: Response): Promise<Response> {
+    return res
+      .status(200)
+      .json({
+        posts: await this.readRecommendedTipUseCase.readRecommendedTip(),
+      })
+      .send();
+  }
+
   @Post()
   async writeTip(
     @Body() dto: WriteTipRequest,
@@ -86,7 +96,7 @@ export class TipController {
       .sendStatus(200);
   }
 
-  @Get('search?')
+  @Get('/search')
   async searchTip(
     @Headers('Authorization') token: string,
     @Query() dto: SearchTipRequest,
@@ -99,14 +109,6 @@ export class TipController {
     return res
       .status(200)
       .json({ tips: await this.searchTipUseCase.searchTip(dto, token) })
-      .send();
-  }
-
-  @Get('/recommend')
-  async readRecommended(@Res() res: Response): Promise<Response> {
-    return res
-      .status(200)
-      .json({ posts: await this.readRecommendedTipUseCase.readRecommendedTip() })
       .send();
   }
 }

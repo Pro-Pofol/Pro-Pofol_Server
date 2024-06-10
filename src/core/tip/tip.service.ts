@@ -102,7 +102,8 @@ export class ReadRecommendedTipService implements ReadRecommendedTipUseCase {
   readRecommendedTip = async (): Promise<object[]> => {
     const data = await this.readTipPort.readAllTipByRandom();
 
-    if (data.length === 0) throw new HttpException('There is No Content', 204);
+    if (!data || data.length === 0)
+      throw new HttpException('There is No Content', 204);
 
     return data;
   };

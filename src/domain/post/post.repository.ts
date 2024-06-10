@@ -52,7 +52,7 @@ export class PostRepository
   searchPost = async (dto: PostSearchRequest): Promise<object[]> => {
     const { keyword, type, major, sort } = dto;
 
-    const posts = await this.postEntity
+    const posts = this.postEntity
       .createQueryBuilder('post')
       .innerJoin('post.user', 'user', 'user.id = post.writer_id')
       .select([
@@ -72,6 +72,6 @@ export class PostRepository
       posts.andWhere('post.post_type = :post_type', { post_type: type });
     }
 
-    return posts.getRawMany();
+    return await posts.getRawMany();
   };
 }

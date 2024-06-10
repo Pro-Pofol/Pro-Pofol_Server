@@ -17,5 +17,5 @@ export interface ReadTipPort {
 
   searchTip(dto: SearchTipRequest): Promise<object[]>;
 
-  readAllTipByRandom(): Promise<object[]>;
+  readAllTipByRandom(): Promise<object[] | null>;
 }

@@ -53,15 +53,15 @@ export class TipRepository implements SaveTipPort, UpdateTipPort, ReadTipPort {
       .getRawMany();
   };
 
-  readAllTipByRandom = async (): Promise<object[]> => {
+  readAllTipByRandom = async (): Promise<object[] | null> => {
     return await this.tipEntity
       .createQueryBuilder('tip')
       .select([
-        'tip.id',
-        'tip.title',
-        'tip.content',
-        'tip.writer_id',
-        'tip.created_at',
+        'tip.id AS id',
+        'tip.title AS title',
+        'tip.content AS content',
+        'tip.writer_id AS writer_id',
+        'tip.created_at AS created_at',
       ])
       .orderBy('RAND()')
       .limit(18)
