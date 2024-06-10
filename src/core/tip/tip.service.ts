@@ -11,7 +11,7 @@ import {
   WriteTipRequest,
 } from '../../presentation/tip/dto/tip.request';
 import { Tip } from '../../domain/tip/tip.entity';
-import { ForbiddenException, HttpException, Inject, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, HttpException, Inject } from '@nestjs/common';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
 import { ReadTipPort, SaveTipPort, UpdateTipPort } from './port/tip.out.port';
 

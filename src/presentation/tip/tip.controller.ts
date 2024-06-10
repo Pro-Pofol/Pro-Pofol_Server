@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -24,6 +25,7 @@ import {
   SearchTipUseCase,
   WriteTipUseCase,
 } from '../../core/tip/port/tip.in.port';
+import { SortType } from 'src/domain/post/post.entity';
 
 @Controller('tip')
 export class TipController {
@@ -39,6 +41,22 @@ export class TipController {
     @Inject('readRecommendedTip')
     private readonly readRecommendedTipUseCase: ReadRecommendedTipUseCase,
   ) {}
+
+  @Get('/search')
+  async searchTip(
+    @Query() dto: SearchTipRequest,
+    @Headers('Authorization') token: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token) {
+      throw new UnauthorizedException('Permission denied');
+    }
+
+    return res
+      .status(200)
+      .json({ tips: await this.searchTipUseCase.searchTip(dto, token) })
+      .send();
+  }
 
   @Get('/recommend')
   async readRecommended(@Res() res: Response): Promise<Response> {
@@ -94,21 +112,5 @@ export class TipController {
     return res
       .json(await this.readDetailTipUseCase.readDetail(tipId, token))
       .sendStatus(200);
-  }
-
-  @Get('/search')
-  async searchTip(
-    @Headers('Authorization') token: string,
-    @Query() dto: SearchTipRequest,
-    @Res() res: Response,
-  ): Promise<Response> {
-    if (!token) {
-      throw new UnauthorizedException('Permission denied');
-    }
-
-    return res
-      .status(200)
-      .json({ tips: await this.searchTipUseCase.searchTip(dto, token) })
-      .send();
   }
 }
