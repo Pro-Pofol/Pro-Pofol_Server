@@ -1,4 +1,5 @@
 import {
+  DeleteTipUseCase,
   ModifyTipUseCase,
   ReadDetailTipUseCase,
   ReadRecommendedTipUseCase,
@@ -11,9 +12,15 @@ import {
   WriteTipRequest,
 } from '../../presentation/tip/dto/tip.request';
 import { Tip } from '../../domain/tip/tip.entity';
-import { ForbiddenException, HttpException, Inject } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  Inject,
+  NotFoundException,
+} from '@nestjs/common';
 import { ReadCurrentUserPort } from '../auth/port/auth.out.port';
-import { ReadTipPort, SaveTipPort, UpdateTipPort } from './port/tip.out.port';
+import { DeleteTipPort, ReadTipPort, SaveTipPort, UpdateTipPort } from './port/tip.out.port';
+import { JwtAdapter } from '../../infrastructure/jwt/jwt.adapter';
 
 export class WriteTipService implements WriteTipUseCase {
   constructor(
@@ -23,12 +30,14 @@ export class WriteTipService implements WriteTipUseCase {
     private readonly saveTipPort: SaveTipPort,
   ) {}
 
-  write = async (dto: WriteTipRequest, token: string): Promise<void> => {
+  write = async (dto: WriteTipRequest, token: string): Promise<number> => {
     const user = await this.readCurrentUserPort.verifyUser(token);
 
-    const tip = new Tip(dto.title, dto.content, user);
+    const tip = await this.saveTipPort.save(
+      new Tip(dto.title, dto.content, user),
+    );
 
-    await this.saveTipPort.save(tip);
+    return tip.id;
   };
 }
 
@@ -106,5 +115,33 @@ export class ReadRecommendedTipService implements ReadRecommendedTipUseCase {
       throw new HttpException('There is No Content', 204);
 
     return data;
+  };
+}
+
+export class DeleteTipService implements DeleteTipUseCase {
+  constructor(
+    @Inject('tip out port')
+    private readonly readTipPort: ReadTipPort,
+    @Inject('tip out port')
+    private readonly deleteTipPort: DeleteTipPort,
+    @Inject('jwt')
+    private readonly readCurrentUserPort: ReadCurrentUserPort,
+  ) {}
+
+  deleteFromId = async (tipId: number, token: string): Promise<void> => {
+    const user = await this.readCurrentUserPort.verifyUser(token);
+
+    console.log(tipId);
+
+    const tip = await this.readTipPort.findByIdOrFail(tipId);
+    console.log(tip);
+
+    if (user.id != tip.writer_id) {
+      throw new ForbiddenException('Permission denied for this tip');
+    }
+
+    console.log(tip.id);
+
+    await this.deleteTipPort.deleteById(tip.id);
   };
 }

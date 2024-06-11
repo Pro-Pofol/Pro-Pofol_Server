@@ -1,7 +1,7 @@
 import {
-  BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Inject,
@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -17,15 +18,15 @@ import {
   SearchTipRequest,
   WriteTipRequest,
 } from './dto/tip.request';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import {
+  DeleteTipUseCase,
   ModifyTipUseCase,
   ReadDetailTipUseCase,
   ReadRecommendedTipUseCase,
   SearchTipUseCase,
   WriteTipUseCase,
 } from '../../core/tip/port/tip.in.port';
-import { SortType } from 'src/domain/post/post.entity';
 
 @Controller('tip')
 export class TipController {
@@ -40,6 +41,8 @@ export class TipController {
     private readonly searchTipUseCase: SearchTipUseCase,
     @Inject('readRecommendedTip')
     private readonly readRecommendedTipUseCase: ReadRecommendedTipUseCase,
+    @Inject('deleteTip')
+    private readonly deleteTipUseCase: DeleteTipUseCase,
   ) {}
 
   @Get('/search')
@@ -58,6 +61,20 @@ export class TipController {
       .send();
   }
 
+  @Delete('/:tipId')
+  async deleteTip(
+    @Headers('Authorization') token: string,
+    @Param('tipId') tipId: number,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!token || !tipId) {
+      throw new UnauthorizedException('Permission denied');
+    }
+    await this.deleteTipUseCase.deleteFromId(tipId, token);
+
+    return res.sendStatus(200);
+  }
+
   @Get('/recommend')
   async readRecommended(@Res() res: Response): Promise<Response> {
     return res
@@ -72,15 +89,24 @@ export class TipController {
   async writeTip(
     @Body() dto: WriteTipRequest,
     @Headers('Authorization') token: string,
+    @Req() req: Request,
     @Res() res: Response,
   ): Promise<Response> {
     if (!token) {
       throw new UnauthorizedException('Permission denied');
     }
 
-    await this.writeTipUseCase.write(dto, token);
+    const tipId = await this.writeTipUseCase.write(dto, token);
 
-    return res.sendStatus(201);
+    let location: string;
+
+    if (req.hostname != 'localhost') {
+      location = `${req.protocol}://${req.hostname}/tip/${tipId}`;
+    } else {
+      location = `${req.protocol}://${req.hostname}:${process.env.PORT}/tip/${tipId}`;
+    }
+
+    return res.location(location).sendStatus(201);
   }
 
   @Patch('/:tipId')
@@ -105,7 +131,7 @@ export class TipController {
     @Param('tipId') tipId: number,
     @Res() res: Response,
   ): Promise<Response> {
-    if (!token) {
+    if (!token || !tipId) {
       throw new UnauthorizedException('Permission denied');
     }
 

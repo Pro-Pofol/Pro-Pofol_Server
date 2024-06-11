@@ -35,6 +35,7 @@ export class AwsService {
       Body: file.buffer,
       ContentType: 'application/octet-stream',
     };
+
     const data = await this.s3.upload(params).promise();
 
     return data.Location;

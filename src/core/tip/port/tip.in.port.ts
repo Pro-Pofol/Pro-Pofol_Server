@@ -5,7 +5,7 @@ import {
 } from '../../../presentation/tip/dto/tip.request';
 
 export interface WriteTipUseCase {
-  write(dto: WriteTipRequest, token: string): Promise<void>;
+  write(dto: WriteTipRequest, token: string): Promise<number>;
 }
 
 export interface ModifyTipUseCase {
@@ -22,4 +22,8 @@ export interface SearchTipUseCase {
 
 export interface ReadRecommendedTipUseCase {
   readRecommendedTip(): Promise<object[]>;
+}
+
+export interface DeleteTipUseCase {
+  deleteFromId(id: number, token: string): Promise<void>;
 }
