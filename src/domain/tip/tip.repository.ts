@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tip } from './tip.entity';
 import {
+  DeleteTipPort,
   ReadTipPort,
   SaveTipPort,
   UpdateTipPort,
@@ -13,7 +14,9 @@ import {
 } from 'src/presentation/tip/dto/tip.request';
 
 @Injectable()
-export class TipRepository implements SaveTipPort, UpdateTipPort, ReadTipPort {
+export class TipRepository
+  implements SaveTipPort, UpdateTipPort, ReadTipPort, DeleteTipPort
+{
   constructor(
     @InjectRepository(Tip) private readonly tipEntity: Repository<Tip>,
   ) {}
@@ -26,8 +29,8 @@ export class TipRepository implements SaveTipPort, UpdateTipPort, ReadTipPort {
     await this.tipEntity.update(tipId, dto);
   };
 
-  findByIdOrFail = async (tipId: number): Promise<Tip> => {
-    const tip = await this.tipEntity.findOneBy({ id: tipId });
+  findByIdOrFail = async (id: number): Promise<Tip> => {
+    const tip = await this.tipEntity.findOneBy({ id });
 
     if (!tip) throw new NotFoundException('Tip Not Found');
 
@@ -66,5 +69,13 @@ export class TipRepository implements SaveTipPort, UpdateTipPort, ReadTipPort {
       .orderBy('RAND()')
       .limit(18)
       .getRawMany();
+  };
+
+  deleteById = async (tipId: number): Promise<void> => {
+    await this.tipEntity
+      .createQueryBuilder()
+      .delete()
+      .where('tbl_tip.id = :id', { id: tipId })
+      .execute();
   };
 }

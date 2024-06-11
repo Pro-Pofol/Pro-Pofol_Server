@@ -13,9 +13,13 @@ export interface UpdateTipPort {
 }
 
 export interface ReadTipPort {
-  findByIdOrFail(tipId: number): Promise<Tip>;
+  findByIdOrFail(id: number): Promise<Tip>;
 
   searchTip(dto: SearchTipRequest): Promise<object[]>;
 
   readAllTipByRandom(): Promise<object[] | null>;
+}
+
+export interface DeleteTipPort {
+  deleteById(tipId: number): Promise<void>;
 }

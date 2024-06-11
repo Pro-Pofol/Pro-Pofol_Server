@@ -7,6 +7,7 @@ import { TipRepository } from '../../domain/tip/tip.repository';
 import { User } from '../../domain/user/user.entity';
 import { UserRepository } from '../../domain/user/user.repository';
 import {
+  DeleteTipService,
   ModifyTipService,
   ReadDetailTipService,
   ReadRecommendedTipService,
@@ -32,6 +33,7 @@ import { JwtModule } from '@nestjs/jwt';
     { provide: 'readDetailTip', useClass: ReadDetailTipService },
     { provide: 'searchTip', useClass: SearchTipService },
     { provide: 'readRecommendedTip', useClass: ReadRecommendedTipService },
+    { provide: 'deleteTip', useClass: DeleteTipService },
   ],
 })
 export class TipModule {}
